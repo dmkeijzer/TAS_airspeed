@@ -33,9 +33,26 @@ class trial_data:
         plt.show()
 
 #example of how to conventienly load a trial in
-run1 = trial_data(files[0])
+""" run1 = trial_data(files[0])
+run2 = trial_data(files[1])
+run3 = trial_data(files[2])
 
-print(run1.mic_1)
+rand = [run1, run2, run3]
+
+print(rand[0].mic_1) """
+
+def load_all():
+    lst = [] #create empty list to append all trials to 
+    for file in files: #iterate over all files and load them into list
+        lst.append(trial_data(file))
+        print(f"{file} has been loaded in")
+    return lst
+
+load_all()
+
+
+
+
 
 
 
