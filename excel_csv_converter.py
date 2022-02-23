@@ -1,23 +1,37 @@
 import pandas as pd
 import os
+import time
 
 files = os.listdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\OG_data\data\microphone_data")
 os.chdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\OG_data\data\microphone_data")
 
-print("Process has started")
+t1 = time.time()
 
-read_file = pd.read_excel(files[0], sheet_name= "Untitled")
+#todo loop process so that we can do it for every file, first test 
+# for only 5 files before doing the entire thing and fucking it up 
+#also delete everything in clean data before starting
 
-print(f"{files[0]} has been loaded in")
+for counter, file in enumerate(files, start= 1):
+    if counter == 4:
+        break
+    print(f"\n file {counter}")
+    print(f"\n{file} is being loaded into memory")
 
-clean_path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data\cleandata_"
-clean_path += files[0]
-clean_path =  clean_path.replace(".xlsx", ".csv")
+    read_file = pd.read_excel(file, sheet_name= "Untitled")
 
-print(f"test = {clean_path}")
-read_file.to_csv (clean_path, index = None, header=True)
+    print(f"{file} has been loaded into memory")
 
-print(f"{clean_path} has been converted to csv and put in clean data")
+    clean_path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data\cleandata_"
+    clean_path += file
+    clean_path =  clean_path.replace(".xlsx", ".csv")
 
+    read_file.to_csv (clean_path, index = None, header=True)
+
+    print(f"{file} has been converted to csv and saved")
+
+t2 = time.time()
+
+print(f"execution time = {t2-t1}")
+    
 
 
