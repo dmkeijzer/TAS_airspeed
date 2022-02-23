@@ -16,6 +16,7 @@ class trial_data:
     
     def __init__(self, path):
         self.df = pd.read_csv(path)
+        self.name = path
         self.mic_1 = self.df.loc[:, "m1"] #voltage values from mic 1
         self.mic_2 = self.df.loc[:, "m2"] #voltage values from mic 2
         self.mic_3 = self.df.loc[:, "m3"] #voltage values from mic 3
@@ -27,13 +28,18 @@ class trial_data:
     def plot_vt(self, index , th_line = 0.6):
         mic = [self.mic_1, self.mic_2, self.mic_3]
 
-        plt.plot(self.time_arr[0:50000], mic[index][0:50000], "-k", linewidth = th_line) 
+        plt.plot(self.time_arr[0:50000], mic[index][0:50000], "-k", linewidth = th_line)
+        plt.title(f"{self.name}") 
         plt.ylabel(f"voltage mic {index +1} [V]") 
         plt.xlabel("Time [s]")
         plt.show()
 
 #example of how to conventienly load a trial in
-#run1 = trial_data(files[0])
+run1 = trial_data(files[2])
+run2 = trial_data(files[0])
+
+run1.plot_vt(2)
+run2.plot_vt(2)
 
 def load_all():
     """Function to load in all files, function will probably changed so you can add a path from which you will load in all files. 
@@ -44,6 +50,7 @@ def load_all():
         print(f"{file} has been loaded in")
     return lst
 
+load_all()
 
 
 
