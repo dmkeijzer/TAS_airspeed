@@ -3,12 +3,12 @@ import matplotlib.pyplot as plt
 import os
 
 #change working directory to csv files location, you will have to edit this path to suit your own OS. Make sure to keep the r'random//path' notation
-os.chdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\microphone_data")
+os.chdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data")
 
 #Create list of all files at path location, (Insert same path as used above)
-files = os.listdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\microphone_data")
+files = os.listdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data")
 
-
+print(files)
 
 class trial_data:
     
@@ -35,11 +35,11 @@ class trial_data:
         plt.show()
 
 #example of how to conventienly load a trial in
-run1 = trial_data(files[2])
 run2 = trial_data(files[0])
 
-run1.plot_vt(2)
-run2.plot_vt(2)
+print(run2.mic_1)
+
+
 
 def load_all():
     """Function to load in all files, function will probably changed so you can add a path from which you will load in all files. 
@@ -50,7 +50,7 @@ def load_all():
         print(f"{file} has been loaded in")
     return lst
 
-load_all()
+
 
 
 
