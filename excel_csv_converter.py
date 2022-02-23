@@ -7,13 +7,10 @@ os.chdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\OG_data\data\microphone_da
 
 t1 = time.time()
 
-#todo loop process so that we can do it for every file, first test 
-# for only 5 files before doing the entire thing and fucking it up 
-#also delete everything in clean data before starting
+#reading loop
 
 for counter, file in enumerate(files, start= 1):
-    if counter == 4:
-        break
+
     print(f"\n file {counter}")
     print(f"\n{file} is being loaded into memory")
 
