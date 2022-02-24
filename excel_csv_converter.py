@@ -28,7 +28,7 @@ for counter, file in enumerate(files, start= 1):
 
 t2 = time.time()
 
-print(f"execution time = {t2-t1}")
+print(f"execution time = {t2-t1} [s] or {(t2 -t1) / 60} [minutes]")
     
 
 
