@@ -8,7 +8,7 @@ os.chdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data")
 #Create list of all files at path location, (Insert same path as used above)
 files = os.listdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data")
 
-print(files)
+
 
 class trial_data:
     
@@ -28,16 +28,15 @@ class trial_data:
     def plot_vt(self, index , th_line = 0.6):
         mic = [self.mic_1, self.mic_2, self.mic_3]
 
-        plt.plot(self.time_arr[0:50000], mic[index][0:50000], "-k", linewidth = th_line)
+        plt.plot(self.time_arr[0:10000], mic[index][0:10000], "-k", linewidth = th_line)
         plt.title(f"{self.name}") 
         plt.ylabel(f"voltage mic {index +1} [V]") 
         plt.xlabel("Time [s]")
         plt.show()
 
 #example of how to conventienly load a trial in
-run2 = trial_data(files[0])
+run = trial_data(files[files.index('cleandata_run_noEngine_0alpha_0ms_data.csv')])
 
-print(run2.mic_1)
 
 
 
@@ -45,11 +44,19 @@ def load_all():
     """Function to load in all files, function will probably changed so you can add a path from which you will load in all files. 
     This would make more sense."""
     lst = [] #create empty list to append all trials to 
-    for file in files: #iterate over all files and load them into list
+    for counter, file in enumerate(files): #iterate over all files and load them into list
         lst.append(trial_data(file))
         print(f"{file} has been loaded in")
+        if counter == 6:
+            break
     return lst
 
+
+lst = load_all()
+
+for run in lst:
+    run.plot_vt(0)
+    run.plot_vt(1)
 
 
 
