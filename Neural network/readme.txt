@@ -1,0 +1,1 @@
+This folder contains all code concerning the neural network.
