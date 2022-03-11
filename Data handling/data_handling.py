@@ -1,9 +1,15 @@
-import pandas as pd
+import csv
+import numpy as np
+import scipy.fft as scf
 import matplotlib.pyplot as plt
 import os
-
-#change working directory to csv files location, you will have to edit this path to suit your own OS. Make sure to keep the r'random//path' notation
+import sys
+import pandas as pd
+sys.path.append('D:\Aerospace Engineering\Bachelor Year 2\AE2223-I Test Analysis & Simulation\CSV')
+files = os.listdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data")
 os.chdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data")
+#change working directory to csv files location, you will have to edit this path to suit your own OS. Make sure to keep the r'random//path' notation
+
 
 #Create list of all files at path location, (Insert same path as used above)
 files = os.listdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data")
@@ -17,10 +23,13 @@ class trial_data:
     def __init__(self, path):
         self.df = pd.read_csv(path)
         self.name = path
-        self.mic_1 = self.df.loc[:, "m1"] #voltage values from mic 1
+        self.mic_1 = self.df.loc[:, "m1"].values #voltage values from mic 1
         self.mic_2 = self.df.loc[:, "m2"] #voltage values from mic 2
         self.mic_3 = self.df.loc[:, "m3"] #voltage values from mic 3
         self.time_arr = self.df.loc[:,"m1_Time*"] #series containing all time points
+        self.x = scf.rfftfreq(len(self.time_arr), self.time_arr[1])
+        self.y2 = np.abs(scf.rfft(self.mic_2))
+        self.y3 = np.abs(scf.rfft(self.mic_3))
 
 
         """ The following function let's you plot voltage vs time (vt). The index parameter
@@ -36,6 +45,9 @@ class trial_data:
 
 #example of how to conventienly load a trial in
 run = trial_data(files[files.index('cleandata_run_noEngine_0alpha_0ms_data.csv')])
+print(run.mic_1.values)
+
+print(type(run.mic_1.values[0]))
 
 
 
@@ -52,11 +64,6 @@ def load_all():
     return lst
 
 
-lst = load_all()
-
-for run in lst:
-    run.plot_vt(0)
-    run.plot_vt(1)
 
 
 
