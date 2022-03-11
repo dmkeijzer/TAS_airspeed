@@ -64,26 +64,34 @@ class trial_data:
         mic = [self.mic_1, self.mic_2, self.mic_3]
 
         plt.plot(self.time_arr[0:10000], mic[index][0:10000], "-k", linewidth = th_line)
-        plt.title(f"{self.name}") 
+        plt.title(f"{self.path}") 
         plt.ylabel(f"voltage mic {index +1} [V]") 
         plt.xlabel("Time [s]")
         plt.show()
+    
 
 
 
 
+file1 = open(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\TAS_airspeed\Data handling\data_freq.txt","a")
+print(type(file1))
+for counter, file in enumerate(os.listdir(file_path)):
+    if counter == 5: 
+        break
 
-for file in os.listdir(file_path):
-    # file = 'cleandata_run_noPropeller_60alpha_10ms_data_movedUAV.csv'
-    # if file == 'MATconverter.py':
-    #     break
     run = trial_data(file)
     print(run.path)
+    file1.write(str([run.engine, run.alpha, run.v]))
 
 
     print('Sums', [run.P_sum2, run.P_sum3])
     print('Means', [run.mean2, run.mean3])
     print('Stdev', [run.stdev2, run.stdev3])
+
+    run.plot_vt(2)
+
+    file1.write(str([run.P_sum2, run.P_sum3, run.mean2, run.mean3, run.stdev2, run.stdev3,]))
+    file1.write("\n")
 
 
 
