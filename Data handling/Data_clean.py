@@ -10,7 +10,7 @@ sys.path.append('D:\Aerospace Engineering\Bachelor Year 2\AE2223-I Test Analysis
 def data_handling(filename):
     file = open(filename, encoding='utf-8')
 
-    csvreader = csv.reader(file)
+    csvreader = pd.read_csv()
 
     header = []
     header = next(csvreader)
