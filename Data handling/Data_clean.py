@@ -1,5 +1,4 @@
 import csv
-from email import header
 import numpy as np
 import scipy.fft as scf
 import matplotlib.pyplot as plt
@@ -7,7 +6,7 @@ import os
 import sys
 import pandas as pd
 
-file_path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data"
+file_path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data" #put the path to your data here
 files = os.listdir(file_path)
 os.chdir(file_path)
 
