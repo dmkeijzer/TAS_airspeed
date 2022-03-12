@@ -1,4 +1,5 @@
 import csv
+from email import header
 import numpy as np
 import scipy.fft as scf
 import matplotlib.pyplot as plt
@@ -70,28 +71,28 @@ class trial_data:
         plt.show()
     
 
+def create_data_file(file_location, limiter = False): 
 
+    data = []
 
+    for counter, file in enumerate(os.listdir(file_path)):
+        if counter == limiter: 
+            break
 
-file1 = open(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\TAS_airspeed\Data handling\data_freq.txt","a")
-print(type(file1))
-for counter, file in enumerate(os.listdir(file_path)):
-    if counter == 5: 
-        break
+        run = trial_data(file)
+        print(run.path)
+        data.append([run.engine, run.alpha, run.v, run.P_sum2, run.P_sum3, run.mean2, run.mean3, run.stdev2, run.stdev3 ])
 
-    run = trial_data(file)
-    print(run.path)
-    file1.write(str([run.engine, run.alpha, run.v]))
+        print('Sums', [run.P_sum2, run.P_sum3])
+        print('Means', [run.mean2, run.mean3])
+        print('Stdev', [run.stdev2, run.stdev3])
 
+    data = np.array(data)
+    df = pd.DataFrame(data, columns= ["engine", "alpha", "v", "sum2", "sum3", "mean2", "mean3","stdev2", "stdev3"])
+    df.to_csv(file_location + "\data_list.csv")
 
-    print('Sums', [run.P_sum2, run.P_sum3])
-    print('Means', [run.mean2, run.mean3])
-    print('Stdev', [run.stdev2, run.stdev3])
+create_data_file(file_location=r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\TAS_airspeed\Data handling", limiter= 5)
 
-    run.plot_vt(2)
-
-    file1.write(str([run.P_sum2, run.P_sum3, run.mean2, run.mean3, run.stdev2, run.stdev3,]))
-    file1.write("\n")
 
 
 
