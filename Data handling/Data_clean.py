@@ -1,5 +1,4 @@
 import csv
-from email import header
 import numpy as np
 import scipy.fft as scf
 import matplotlib.pyplot as plt
