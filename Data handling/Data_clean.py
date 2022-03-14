@@ -23,11 +23,16 @@ class trial_data:
         self.mic_2 = self.df.loc[:, "m2"].values #voltage values from mic 2
         self.mic_3 = self.df.loc[:, "m3"].values #voltage values from mic 3
         self.time_arr = self.df.loc[:,"m1_Time*"].values #series containing all time points
+        
+        #switching to frequency domain
         self.x = scf.rfftfreq(len(self.time_arr), self.time_arr[1])
         self.y2 = np.abs(scf.rfft(self.mic_2))
         self.y3 = np.abs(scf.rfft(self.mic_3))
         self.y2 = abs(((self.y2 > 20) * (30 < self.x) * (self.x < 70))-1) * self.y2
         self.y3 = abs(((self.y3 > 20) * (30 < self.x) * (self.x < 70))-1) * self.y3
+        
+        #cleaning the weird peaks from the data
+
         for i in range(1, int(self.x[-1] / 50)):
             self.y2 = abs(((self.y2 > 20) * (50 * i - 5 < self.x) * (self.x < 50 * i + 5))-1) * self.y2
             self.y3 = abs(((self.y3 > 20) * (50 * i - 5 < self.x) * (self.x < 50 * i + 5))-1) * self.y3
@@ -37,6 +42,8 @@ class trial_data:
         self.mean3 = np.mean(self.y3)
         self.stdev2 = np.std(self.y2)
         self.stdev3 = np.std(self.y3)
+
+        #recognizing what the input parameters are for current run
 
         if self.path[2] == 'noEngine':
             self.engine = 0
@@ -71,12 +78,15 @@ class trial_data:
     
 
 def create_data_file(file_location, limiter = False): 
+    """Creates a csv file of some key parameters of all the runs. The amount
+    of files can be limited with the limiter parameter"""
 
     data = []
 
     for counter, file in enumerate(os.listdir(file_path)):
-        if counter == limiter: 
+        if limiter == int and counter == limiter: 
             break
+            
 
         run = trial_data(file)
         print(run.path)
@@ -90,7 +100,7 @@ def create_data_file(file_location, limiter = False):
     df = pd.DataFrame(data, columns= ["engine", "alpha", "v", "sum2", "sum3", "mean2", "mean3","stdev2", "stdev3"])
     df.to_csv(file_location + "\data_list.csv")
 
-create_data_file(file_location=r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\TAS_airspeed\Data handling", limiter= 5)
+create_data_file(file_location=r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data")
 
 
 
