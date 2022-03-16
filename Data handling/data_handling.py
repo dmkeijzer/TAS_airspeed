@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 import os
 
 #change working directory to csv files location, you will have to edit this path to suit your own OS. Make sure to keep the r'random//path' notation
-os.chdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data")
+os.chdir(r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\clean_data")
 
 #Create list of all files at path location, (Insert same path as used above)
-files = os.listdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data")
+files = os.listdir(r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\clean_data")
 
 
 
@@ -37,6 +37,8 @@ class trial_data:
 #example of how to conventienly load a trial in
 run = trial_data(files[files.index('cleandata_run_noEngine_0alpha_0ms_data.csv')])
 
+run.plot_vt(2)
+
 
 
 
@@ -52,11 +54,11 @@ def load_all():
     return lst
 
 
-lst = load_all()
+# lst = load_all()
 
-for run in lst:
-    run.plot_vt(0)
-    run.plot_vt(1)
+# for run in lst:
+#     run.plot_vt(0)
+#     run.plot_vt(1)
 
 
 
