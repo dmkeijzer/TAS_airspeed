@@ -6,8 +6,8 @@ import os
 import sys
 import pandas as pd
 sys.path.append('D:\Aerospace Engineering\Bachelor Year 2\AE2223-I Test Analysis & Simulation\CSV')
-files = os.listdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data")
-os.chdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data")
+files = os.listdir(r"C:\Users\Max Reinhard\OneDrive\Documents\BSc2 AE\Test, analysis and simulation\clean_data")
+os.chdir(r"C:\Users\Max Reinhard\OneDrive\Documents\BSc2 AE\Test, analysis and simulation\clean_data")
 
 class trial_data:
     

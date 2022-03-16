@@ -6,13 +6,13 @@ import os
 import sys
 import pandas as pd
 sys.path.append('D:\Aerospace Engineering\Bachelor Year 2\AE2223-I Test Analysis & Simulation\CSV')
-files = os.listdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data")
-os.chdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data")
+files = os.listdir(r"C:\Users\Max Reinhard\OneDrive\Documents\BSc2 AE\Test, analysis and simulation\clean_data")
+os.chdir(r"C:\Users\Max Reinhard\OneDrive\Documents\BSc2 AE\Test, analysis and simulation\clean_data")
 #change working directory to csv files location, you will have to edit this path to suit your own OS. Make sure to keep the r'random//path' notation
 
 
 #Create list of all files at path location, (Insert same path as used above)
-files = os.listdir(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data")
+files = os.listdir(r"C:\Users\Max Reinhard\OneDrive\Documents\BSc2 AE\Test, analysis and simulation\clean_data")
 
 
 
