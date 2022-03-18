@@ -21,6 +21,8 @@ class trial_data:
         self.mic_2 = self.df.loc[:, "m2"] #voltage values from mic 2
         self.mic_3 = self.df.loc[:, "m3"] #voltage values from mic 3
         self.time_arr = self.df.loc[:,"m1_Time*"] #series containing all time points
+        self.x = scf.rfftfreq(len(t), t[1])
+        self.y = scf.rfft(self.m2)
 
 
         """ The following function let's you plot voltage vs time (vt). The index parameter
