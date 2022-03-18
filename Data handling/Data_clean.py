@@ -6,7 +6,7 @@ import os
 import sys
 import pandas as pd
 
-file_path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data" #put the path to your data here
+file_path = r'D:\Aerospace Engineering\Bachelor Year 2\AE2223-I Test Analysis & Simulation\CSV' #put the path to your data here
 files = os.listdir(file_path)
 os.chdir(file_path)
 
@@ -100,7 +100,13 @@ def create_data_file(file_location, limiter = False):
     df = pd.DataFrame(data, columns= ["engine", "alpha", "v", "sum2", "sum3", "mean2", "mean3","stdev2", "stdev3"])
     df.to_csv(file_location + "\data_list.csv")
 
-create_data_file(file_location=r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data")
+run = trial_data(file_path)
+plt.plot(run.time_arr, run.mic_1)
+plt.plot(run.time_arr, run.mic_2)
+plt.plot(run.time_arr, run.mic_3)
+plt.show()
+
+
 
 
 
