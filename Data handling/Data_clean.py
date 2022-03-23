@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import os
 import sys
 import pandas as pd
+from sklearn.preprocessing import normalize
+
 
 file_path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data" #put the path to your data here
 files = os.listdir(file_path)
@@ -28,18 +30,25 @@ class trial_data:
         self.x = scf.rfftfreq(len(self.time_arr), self.time_arr[1])
         self.y2 = np.abs(scf.rfft(self.mic_2))
         self.y3 = np.abs(scf.rfft(self.mic_3))
-        self.y2 = abs(((self.y2 > 20) * (30 < self.x) * (self.x < 70))-1) * self.y2
-        self.y3 = abs(((self.y3 > 20) * (30 < self.x) * (self.x < 70))-1) * self.y3
+        #self.x = (self.x < 14000) * self.x
+        #self.y2 = (self.x < 14000) * self.y2
+        #self.y3 = (self.x < 14000) * self.y3
         
         #cleaning the weird peaks from the data
-
+        
+        self.y2 = abs(((self.y2 > 20) * (30 < self.x) * (self.x < 70))-1) * self.y2
+        self.y3 = abs(((self.y3 > 20) * (30 < self.x) * (self.x < 70))-1) * self.y3
+        self.y2 = (self.y2 < 100) * self.y2
+        self.y3 = (self.y3 < 100) * self.y3
+        
+        radius = 10       
         for i in range(1, int(self.x[-1] / 50)):
-            self.y2 = abs(((self.y2 > 20) * (50 * i - 5 < self.x) * (self.x < 50 * i + 5))-1) * self.y2
-            self.y3 = abs(((self.y3 > 20) * (50 * i - 5 < self.x) * (self.x < 50 * i + 5))-1) * self.y3
+            self.y2 = abs(((self.y2 > 20) * (50 * i - radius < self.x) * (self.x < 50 * i + radius))-1) * self.y2
+            self.y3 = abs(((self.y3 > 20) * (50 * i - radius < self.x) * (self.x < 50 * i + radius))-1) * self.y3
         self.P_sum2 = np.sum(self.y2)
         self.P_sum3 = np.sum(self.y3)
-        self.mean2 = np.mean(self.y2)
-        self.mean3 = np.mean(self.y3)
+        self.expect2 = np.dot(self.x, self.y2) / (np.sum(self.y2))
+        self.expect3 = np.dot(self.x, self.y3) / (np.sum(self.y3))
         self.stdev2 = np.std(self.y2)
         self.stdev3 = np.std(self.y3)
 
@@ -63,6 +72,10 @@ class trial_data:
             self.v = int(self.path[4][:2])
         elif self.path[4][:1].isdigit():
             self.v = int(self.path[4][:1])
+        if self.path[-1] == 'movedUAV.csv':
+            self.state_uav = 1
+        else: 
+            self.state_uav = 0
         
 
         """ The following function let's you plot voltage vs time (vt). The index parameter
@@ -83,25 +96,48 @@ def create_data_file(file_location, limiter = False):
 
     data = []
 
-    for counter, file in enumerate(os.listdir(file_path)):
-        if limiter == int and counter == limiter: 
+    for counter, file in enumerate(os.listdir(file_path) , start=1):
+        if counter == limiter: 
             break
             
 
         run = trial_data(file)
         print(run.path)
-        data.append([run.engine, run.alpha, run.v, run.P_sum2, run.P_sum3, run.mean2, run.mean3, run.stdev2, run.stdev3 ])
+        data.append([run.engine, run.alpha, run.v, run.P_sum2, run.P_sum3, run.expect2, run.expect3, run.stdev2, run.stdev3, run.state_uav])
 
         print('Sums', [run.P_sum2, run.P_sum3])
-        print('Means', [run.mean2, run.mean3])
+        print('expectations', [run.expect2, run.expect3])
         print('Stdev', [run.stdev2, run.stdev3])
-
+    
+    #normalizing the necessary columns
     data = np.array(data)
-    df = pd.DataFrame(data, columns= ["engine", "alpha", "v", "sum2", "sum3", "mean2", "mean3","stdev2", "stdev3"])
-    df.to_csv(file_location + "\data_list.csv")
+    
+    # data[:,0] = normalize(data[:,0].reshape(-1,1)).reshape(1,-1)
+    # data[:,1] = normalize(data[:,1].reshape(-1,1)).reshape(1,-1)
+    # data[:,2] = normalize(data[:,2].reshape(-1,1)).reshape(1,-1)
+    # data[:,3] = normalize(data[:,3].reshape(-1,1)).reshape(1,-1)
+    # data[:,4] = normalize(data[:,4].reshape(-1,1)).reshape(1,-1)
+    # data[:,5] = normalize(data[:,5].reshape(-1,1)).reshape(1,-1)
+    # data[:,6] = normalize(data[:,6].reshape(-1,1)).reshape(1,-1)
+    # data[:,7] = normalize(data[:,7].reshape(-1,1)).reshape(1,-1)
+    # data[:,8] = normalize(data[:,8].reshape(-1,1)).reshape(1,-1)
 
-create_data_file(file_location=r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data")
+    #Writing it to csv
 
+    df = pd.DataFrame(data, columns= ["engine", "alpha", "v", "sum2", "sum3", "expect2", "expect3","stdev2", "stdev3", "state_uav"])
+    df.to_csv(file_location + "\data_list1.csv", index_label= "index")
+
+create_data_file(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data")
+
+def plot_frequency_domain():
+    files.reverse()
+    for i in range(len(files)):
+        run = trial_data(files[i])
+        plt.plot(run.x, run.y2, label = str(run.v))
+    plt.xlabel('Frequency')
+    plt.ylabel('Amplitude')
+    plt.legend()
+    plt.show()
 
 
 
