@@ -70,3 +70,4 @@ plt.plot(x_set2, expRegressor(x_set2, weight_2[0], weight_2[1], weight_2[2]), 'p
 
 plt.yscale('log')
 plt.show()
+
