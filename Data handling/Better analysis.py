@@ -7,7 +7,7 @@ from sklearn.metrics import mean_squared_error
 
 # file_path = r"C:\Users\Tbeja\Desktop\CSVtest.csv"
 file_path = r"C:\Users\Max Reinhard\OneDrive\Documents\BSc2 AE\Test, analysis and simulation\data_list.csv"
-
+file_loc = r"C:\Users\Max Reinhard\OneDrive\Documents\BSc2 AE\Test, analysis and simulation\TAS_airspeed\data_sets"
 regression = []
 
 
@@ -78,6 +78,10 @@ while check:
     except:
         weight1, pcov1 = sp.curve_fit(linearReg, pd.to_numeric(x_set), pd.to_numeric(y1_scale), maxfev=5000)
         weight2, pcov2 = sp.curve_fit(linearReg, pd.to_numeric(x_set), pd.to_numeric(y2_scale), maxfev=5000)
+        weight1 = list(weight1)
+        weight2 = list(weight2)
+        weight1.append(0)
+        weight2.append(0)
         regressor1 = linearReg(x_set, weight1[0], weight1[1])
         regressor2 = linearReg(x_set, weight2[0], weight2[1])
     # plt.plot(pd.to_numeric(x_set), pd.to_numeric(y_set1),
