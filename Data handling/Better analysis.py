@@ -27,10 +27,10 @@ def sortDataFrame(x, y):
 
 def expRegressor(x, a, b,c):
     # regressor (note that fo scipy.optimize.curve_fit to work, x has to be the first variable of the regressor, followed by the coefficients
-    return a * np.exp(np.multiply(x, b)) + c
+    return np.exp(np.multiply(x, a)) + np.multiply(x, b) + c
 
 def linearReg(x, a, b):
-    return np.multiply(a,x) + b
+    return np.multiply(a, x) + b
 
 Data_main = extractFromFile(file_path)
 
@@ -44,71 +44,86 @@ check = True
 i = 0
 k = 0
 
-while check:
-
-    Truth = (Data_main[0:, 1] == Data_main[i, 1]) * \
-            (Data_main[0:, 0] == Data_main[i, 0])
-    index = [i for i, x in enumerate(Truth) if x]
-    start = index[0]
-    end = index[-1] + 1
-    alpha = pd.to_numeric(Data_main[0:, 1])
-    engine = pd.to_numeric(Data_main[0:, 0])
-    x_set = pd.to_numeric(Data_main[start: end, 2])
-    y_set1 = pd.to_numeric(Data_main[start: end, 3])
-    y_set2 = pd.to_numeric(Data_main[start: end, 4])
-    dummy = x_set
-    x_set, y_set1 = sortDataFrame(dummy, y_set1)
-    x_set, y_set2 = sortDataFrame(dummy, y_set2)
-    if engine[i] == 40 or engine[i] == 50 or engine[i] == 60:
-        i = end
-        continue
-    # print(alpha[i], engine[i])
-    print(x_set)
-    print(y_set1)
-    print(y_set2)
-    y1_scale = np.array(y_set1) * scale
-    y2_scale = np.array(y_set2) * scale
-
-    # print(type(pd.to_numeric(x_set)))
-    try:
-        weight1, pcov1 = sp.curve_fit(expRegressor, pd.to_numeric(x_set), pd.to_numeric(y1_scale), maxfev=5000)
-        weight2, pcov2 = sp.curve_fit(expRegressor, pd.to_numeric(x_set), pd.to_numeric(y2_scale), maxfev=5000)
-        regressor1 = expRegressor(x_set, weight1[0], weight1[1], weight1[2])
-        regressor2 = expRegressor(x_set, weight2[0], weight2[1], weight2[2])
-    except:
-        weight1, pcov1 = sp.curve_fit(linearReg, pd.to_numeric(x_set), pd.to_numeric(y1_scale), maxfev=5000)
-        weight2, pcov2 = sp.curve_fit(linearReg, pd.to_numeric(x_set), pd.to_numeric(y2_scale), maxfev=5000)
-        weight1 = list(weight1)
-        weight2 = list(weight2)
-        weight1.append(0)
-        weight2.append(0)
-        regressor1 = linearReg(x_set, weight1[0], weight1[1])
-        regressor2 = linearReg(x_set, weight2[0], weight2[1])
-    # plt.plot(pd.to_numeric(x_set), pd.to_numeric(y_set1),
-    #          label=Data_main[i][1])
+alpha = pd.to_numeric(Data_main[0:, 1])
+engine = pd.to_numeric(Data_main[0:, 0])
+x_set = pd.to_numeric(Data_main[0:, 2])
+y_set1 = pd.to_numeric(Data_main[0:, 3])
+y_set2 = pd.to_numeric(Data_main[0:, 4])
 
 
-    mse1 = mean_squared_error(y1_scale, regressor1)
-    mse2 = mean_squared_error(y2_scale, regressor2)
-    row = [engine[i]] + [alpha[i]] + list(weight1) + [mse1] + list(weight2) + [mse2]
-    regression.append(row)
-    # print(row)
-    plt.scatter(x_set, y_set2)
+X, Y = np.meshgrid(alpha, y_set1)
+ax = plt.axes(projection='3d')
+ax.contour3D(X, Y, x_set, 50, cmap='binary')
+plt.show()
 
-    plt.plot(x_set, scale**(-1) * regressor2, label=alpha[i])
-    plt.legend()
-    k = k + 1
-    plt.show()
 
-    i = end
-    check = i < len(Data_main[0:,1])
-    # check = k < 2
 
+
+# while check:
+#
+#     Truth = (Data_main[0:, 1] == Data_main[i, 1]) * \
+#             (Data_main[0:, 0] == Data_main[i, 0])
+#     index = [i for i, x in enumerate(Truth) if x]
+#     start = index[0]
+#     end = index[-1] + 1
+#     alpha = pd.to_numeric(Data_main[0:, 1])
+#     engine = pd.to_numeric(Data_main[0:, 0])
+#     x_set = pd.to_numeric(Data_main[start: end, 2])
+#     y_set1 = pd.to_numeric(Data_main[start: end, 3])
+#     y_set2 = pd.to_numeric(Data_main[start: end, 4])
+#     dummy = x_set
+#     x_set, y_set1 = sortDataFrame(dummy, y_set1)
+#     x_set, y_set2 = sortDataFrame(dummy, y_set2)
+#     if engine[i] == 40 or engine[i] == 50 or engine[i] == 60:
+#         i = end
+#         continue
+#     # print(alpha[i], engine[i])
+#     # print(x_set)
+#     # print(y_set1)
+#     # print(y_set2)
+#     y1_scale = np.array(y_set1) * scale
+#     y2_scale = np.array(y_set2) * scale
+#
+#     # print(type(pd.to_numeric(x_set)))
+#     try:
+#         weight1, pcov1 = sp.curve_fit(expRegressor, pd.to_numeric(x_set), pd.to_numeric(y1_scale), maxfev=5000)
+#         weight2, pcov2 = sp.curve_fit(expRegressor, pd.to_numeric(x_set), pd.to_numeric(y2_scale), maxfev=5000)
+#         regressor1 = expRegressor(x_set, weight1[0], weight1[1], weight1[2])
+#         regressor2 = expRegressor(x_set, weight2[0], weight2[1], weight2[2])
+#     except:
+#         weight1, pcov1 = sp.curve_fit(linearReg, pd.to_numeric(x_set), pd.to_numeric(y1_scale), maxfev=5000)
+#         weight2, pcov2 = sp.curve_fit(linearReg, pd.to_numeric(x_set), pd.to_numeric(y2_scale), maxfev=5000)
+#         weight1 = list(weight1)
+#         weight2 = list(weight2)
+#         weight1.append(0)
+#         weight2.append(0)
+#         regressor1 = linearReg(x_set, weight1[0], weight1[1])
+#         regressor2 = linearReg(x_set, weight2[0], weight2[1])
+#     # plt.plot(pd.to_numeric(x_set), pd.to_numeric(y_set1),
+#     #          label=Data_main[i][1])
+#
+#
+#     mse1 = mean_squared_error(y1_scale, regressor1)
+#     mse2 = mean_squared_error(y2_scale, regressor2)
+#     row = [engine[i]] + [alpha[i]] + list(weight1) + [mse1] + list(weight2) + [mse2]
+#     regression.append(row)
+#     # print(row)
+#     plt.scatter(x_set, y_set2)
+#
+#     plt.plot(x_set, scale**(-1) * regressor2, label=alpha[i])
+#     plt.legend()
+#     k = k + 1
+#     plt.show()
+#
+#     i = end
+#     check = i < len(Data_main[0:,1])
+#     # check = k < 2
+#
 # plt.legend()
 # plt.yscale('log')
 # plt.show()
-print("regression")
-print(regression)
-
-df = pd.DataFrame(regression, columns=["Engine", "alpha", "A1", "B1", "C1", "MSE1", "A2", "B2", "C2", "MSE2"])
-df.to_csv(file_loc + "\Regression_coef.csv", index_label= "index")
+# # print("regression")
+# # print(regression)
+#
+# df = pd.DataFrame(regression, columns=["Engine", "alpha", "A1", "B1", "C1", "MSE1", "A2", "B2", "C2", "MSE2"])
+# df.to_csv(file_loc + "\Regression_coef_V2.csv", index_label= "index")
