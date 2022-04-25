@@ -3,11 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import scipy.optimize as sp
-from sklearn.metrics import mean_squared_error
+#from sklearn.metrics import mean_squared_error
 
 # file_path = r"C:\Users\Tbeja\Desktop\CSVtest.csv"
-file_path = r"C:\Users\Max Reinhard\OneDrive\Documents\BSc2 AE\Test, analysis and simulation\data_list.csv"
-file_loc = r"C:\Users\Max Reinhard\OneDrive\Documents\BSc2 AE\Test, analysis and simulation\TAS_airspeed\data_sets"
+file_path = r"C:\Users\loxer\OneDrive\Documents\TAS_proj\.idea\data_list.csv"
+#file_loc = r"C:\Users\Max Reinhard\OneDrive\Documents\BSc2 AE\Test, analysis and simulation\TAS_airspeed\data_sets"
 regression = []
 
 
@@ -44,11 +44,50 @@ check = True
 i = 0
 k = 0
 
-alpha = pd.to_numeric(Data_main[0:, 1])
-engine = pd.to_numeric(Data_main[0:, 0])
-x_set = pd.to_numeric(Data_main[0:, 2])
-y_set1 = pd.to_numeric(Data_main[0:, 3])
-y_set2 = pd.to_numeric(Data_main[0:, 4])
+a=0
+b=0
+g = input("Select your engine configuration:")
+
+if g == 0:
+    a = 42
+    b = 82
+    # alpha = pd.to_numeric(Data_main[a:b, 1])
+    # engine = pd.to_numeric(Data_main[a:b, 0])
+    # x_set = pd.to_numeric(Data_main[a:b, 2])
+    # y_set1 = pd.to_numeric(Data_main[a:b, 3])
+    # y_set2 = pd.to_numeric(Data_main[a:b, 4])
+
+if g == 30:
+    a = 0
+    b = 41
+    # alpha = pd.to_numeric(Data_main[a:b, 1])
+    # engine = pd.to_numeric(Data_main[a:b, 0])
+    # x_set = pd.to_numeric(Data_main[a:b, 2])
+    # y_set1 = pd.to_numeric(Data_main[a:b, 3])
+    # y_set2 = pd.to_numeric(Data_main[a:b, 4])
+
+
+if g == -1:
+    a = 83
+    b = 126
+    # alpha = pd.to_numeric(Data_main[a:b, 1])
+    # engine = pd.to_numeric(Data_main[a:b, 0])
+    # x_set = pd.to_numeric(Data_main[a:b, 2])
+    # y_set1 = pd.to_numeric(Data_main[a:b, 3])
+    # y_set2 = pd.to_numeric(Data_main[a:b, 4])
+
+
+alpha = pd.to_numeric(Data_main[a:b, 1])
+engine = pd.to_numeric(Data_main[a:b, 0])
+x_set = pd.to_numeric(Data_main[a:b, 2])
+mic1 = pd.to_numeric(Data_main[a:b, 3])
+mic2 = pd.to_numeric(Data_main[a:b, 4])
+#alpha = pd.to_numeric(Data_main[0:, 1])
+#engine = pd.to_numeric(Data_main[0:, 0])
+#x_set = pd.to_numeric(Data_main[0:, 2])
+#y_set1 = pd.to_numeric(Data_main[0:, 3])
+#y_set2 = pd.to_numeric(Data_main[0:, 4])
+
 
 
 X, Y = np.meshgrid(alpha, y_set1)
