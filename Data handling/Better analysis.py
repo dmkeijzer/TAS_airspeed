@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # file_path = r"C:\Users\Tbeja\Desktop\CSVtest.csv"
-file_path = r"C:\Users\Max Reinhard\OneDrive\Documents\BSc2 AE\Test, analysis and simulation\data_list.csv"
+file_path = r"C:\Users\loxer\OneDrive\Desktop\TAS_airspeed\data_sets\data_list1.csv"
 
 
 def extractFromFile(path):  # Function extracts the column the data from the csv in the form of a transpose dataframe

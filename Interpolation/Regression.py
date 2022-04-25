@@ -3,8 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-file_path = r"C:\Users\Tbeja\Desktop\Second year AE\Q3\AE2223-I Test, Analysis & Simulation\data_list.csv" #path of the file containing the parameters of interest
-weights_file_path = r"C:\Users\Tbeja\PycharmProjects\Hearing Airspeed\regression_weights.csv" #path of the csv file where you want to save the regression weights
+file_path = r"C:\Users\loxer\OneDrive\Desktop\TAS_airspeed\data_sets\data_list1.csv" #path of the file containing the parameters of interest
+weights_file_path = r"C:\Users\loxer\OneDrive\Desktop\TAS_airspeed\data_sets\regression_weights.csv" #path of the csv file where you want to save the regression weights
 
 def extractFromFile(path):  # Function extracts the column the data from the csv in the form of a transpose dataframe
     data_set = pd.read_csv(path, sep=",", header=None)
