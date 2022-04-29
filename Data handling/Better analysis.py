@@ -6,15 +6,15 @@ import scipy.optimize as sp
 #from sklearn.metrics import mean_squared_error
 
 # file_path = r"C:\Users\Tbeja\Desktop\CSVtest.csv"
-<<<<<<< HEAD
+
 file_path = r"C:\Users\loxer\OneDrive\Documents\TAS_proj\.idea\data_list.csv"
 #file_loc = r"C:\Users\Max Reinhard\OneDrive\Documents\BSc2 AE\Test, analysis and simulation\TAS_airspeed\data_sets"
 regression = []
-=======
+
 file_path = r'D:\Aerospace Engineering\Bachelor Year 2\AE2223-I Test Analysis & Simulation\Code\data_sets\data_list1.csv'
 # file_loc = r"C:\Users\Max Reinhard\OneDrive\Documents\BSc2 AE\Test, analysis and simulation\TAS_airspeed\data_sets"
 # regression = []
->>>>>>> b6028da763ab879dafb44bf5c2e1a3405af43c78
+
 
 
 def extractFromFile(path):  # Function extracts the column the data from the csv in the form of a transpose dataframe
@@ -49,45 +49,45 @@ check = True
 i = 0
 k = 0
 
-<<<<<<< HEAD
-a=0
-b=0
-g = input("Select your engine configuration:")
 
-if g == 0:
-    a = 42
-    b = 82
-    # alpha = pd.to_numeric(Data_main[a:b, 1])
-    # engine = pd.to_numeric(Data_main[a:b, 0])
-    # x_set = pd.to_numeric(Data_main[a:b, 2])
-    # y_set1 = pd.to_numeric(Data_main[a:b, 3])
-    # y_set2 = pd.to_numeric(Data_main[a:b, 4])
+# a=0
+# b=0
+# g = input("Select your engine configuration:")
+#
+# if g == 0:
+#     a = 42
+#     b = 82
+#     # alpha = pd.to_numeric(Data_main[a:b, 1])
+#     # engine = pd.to_numeric(Data_main[a:b, 0])
+#     # x_set = pd.to_numeric(Data_main[a:b, 2])
+#     # y_set1 = pd.to_numeric(Data_main[a:b, 3])
+#     # y_set2 = pd.to_numeric(Data_main[a:b, 4])
+#
+# if g == 30:
+#     a = 0
+#     b = 41
+#     # alpha = pd.to_numeric(Data_main[a:b, 1])
+#     # engine = pd.to_numeric(Data_main[a:b, 0])
+#     # x_set = pd.to_numeric(Data_main[a:b, 2])
+#     # y_set1 = pd.to_numeric(Data_main[a:b, 3])
+#     # y_set2 = pd.to_numeric(Data_main[a:b, 4])
+#
+#
+# if g == -1:
+#     a = 83
+#     b = 126
+#     # alpha = pd.to_numeric(Data_main[a:b, 1])
+#     # engine = pd.to_numeric(Data_main[a:b, 0])
+#     # x_set = pd.to_numeric(Data_main[a:b, 2])
+#     # y_set1 = pd.to_numeric(Data_main[a:b, 3])
+#     # y_set2 = pd.to_numeric(Data_main[a:b, 4])
 
-if g == 30:
-    a = 0
-    b = 41
-    # alpha = pd.to_numeric(Data_main[a:b, 1])
-    # engine = pd.to_numeric(Data_main[a:b, 0])
-    # x_set = pd.to_numeric(Data_main[a:b, 2])
-    # y_set1 = pd.to_numeric(Data_main[a:b, 3])
-    # y_set2 = pd.to_numeric(Data_main[a:b, 4])
 
-
-if g == -1:
-    a = 83
-    b = 126
-    # alpha = pd.to_numeric(Data_main[a:b, 1])
-    # engine = pd.to_numeric(Data_main[a:b, 0])
-    # x_set = pd.to_numeric(Data_main[a:b, 2])
-    # y_set1 = pd.to_numeric(Data_main[a:b, 3])
-    # y_set2 = pd.to_numeric(Data_main[a:b, 4])
-
-
-alpha = pd.to_numeric(Data_main[a:b, 1])
-engine = pd.to_numeric(Data_main[a:b, 0])
-x_set = pd.to_numeric(Data_main[a:b, 2])
-mic1 = pd.to_numeric(Data_main[a:b, 3])
-mic2 = pd.to_numeric(Data_main[a:b, 4])
+alpha = pd.to_numeric(Data_main[0:, 1])
+engine = pd.to_numeric(Data_main[0:, 0])
+x_set = pd.to_numeric(Data_main[0:, 2])
+mic1 = pd.to_numeric(Data_main[0:, 3])
+mic2 = pd.to_numeric(Data_main[0:, 4])
 #alpha = pd.to_numeric(Data_main[0:, 1])
 #engine = pd.to_numeric(Data_main[0:, 0])
 #x_set = pd.to_numeric(Data_main[0:, 2])
