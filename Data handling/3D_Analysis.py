@@ -27,14 +27,11 @@ def sortDataFrame(x, y):
 
 
 def PolyRegressor(x, a, b, c, d, e, f, g, h, i, j):
-    # regressor (note that fo scipy.optimize.curve_fit to work, x has to be the first variable of the regressor, followed by the coefficients
+    # regressor (note that fo scipy.optimize.curve_fit to work, x has to be the first variable of the regressor,
+    # followed by the coefficients
     return a * x[0] * x[0] * x[0] + b * x[1] * x[1] * x[1] + c * x[1] * x[1] * x[0] + d * x[1] * x[0] * x[0] + e * x[
         0] * x[1] + f * x[0] * x[0] + g * x[1] * x[1] + h * x[0] + i * x[1] + j
 
-
-# np.multiply(a, x**3) + np.multiply(b, y**3) + np.multiply(c, x**2, y) + np.multiply(d, y**2, x) +
-# def linearReg(x, a, b):
-#     return np.multiply(a,x) + b
 
 Data_main = extractFromFile(file_path)
 
@@ -48,22 +45,17 @@ scale = 1
 i = 0
 k = 0
 
-# Truth = (Data_main[0:, 1] == Data_main[i, 1]) * \
-#             (Data_main[0:, 0] == Data_main[i, 0])
-# index = [i for i, x in enumerate(Truth) if x]
-# start = index[0]
-# end = index[-1] + 1
 alpha = pd.to_numeric(Data_main[0:, 1])
 engine = pd.to_numeric(Data_main[0:, 0])
 Vel = pd.to_numeric(Data_main[0:, 2])
 mic1 = pd.to_numeric(Data_main[0:, 3])
 mic2 = pd.to_numeric(Data_main[0:, 4])
 mic = (mic1 + mic2) / 2
-index = np.where(mic2 == max(mic2))
-print(alpha[index], engine[index], Vel[index])
-inputarr1 = [(mic1 / scale), alpha]
-inputarr2 = [(mic2 / scale), alpha]
-inputarr3 = [(mic / scale), alpha]
+# index = np.where(mic2 == max(mic2))
+# print(alpha[index], engine[index], Vel[index])
+inputarr1 = [mic1, alpha]
+inputarr2 = [mic2, alpha]
+inputarr3 = [mic, alpha]
 weight1, pcov1 = sp.curve_fit(PolyRegressor, inputarr1, Vel)
 weight2, pcov2 = sp.curve_fit(PolyRegressor, inputarr2, Vel)
 weight3, pcov3 = sp.curve_fit(PolyRegressor, inputarr3, Vel)
@@ -106,18 +98,18 @@ print('MSE', np.sqrt(mean_squared_error(Vel, regressor1)), np.sqrt(mean_squared_
 # ax.set_zlabel('Velocity')
 # plt.show()
 #
-# fig = plt.figure(figsize=(8, 8))
-# ax = fig.add_subplot(projection='3d')
-# ax.scatter(mic, alpha, Vel, color='red', label='Exact values')
-# surf = ax.plot_trisurf(mic, alpha, regressor3, label='Approximation')
-# surf._edgecolors2d = surf._edgecolor3d
-# surf._facecolors2d = surf._facecolor3d
-# ax.legend()
-# ax.set_title('Regression - Engine 30')
-# ax.set_xlabel('PSL')
-# ax.set_ylabel('Angle of Attack')
-# ax.set_zlabel('Velocity')
-# plt.show()
+fig = plt.figure(figsize=(8, 8))
+ax = fig.add_subplot(projection='3d')
+ax.scatter(mic, alpha, Vel, color='red', label='Exact values', alpha=1)
+surf = ax.plot_trisurf(mic, alpha, regressor3, label='Approximation', alpha=0.9)
+surf._edgecolors2d = surf._edgecolor3d
+surf._facecolors2d = surf._facecolor3d
+ax.legend()
+ax.set_title('Velocity Regression')
+ax.set_xlabel('PSL')
+ax.set_ylabel('Angle of Attack(deg)')
+ax.set_zlabel('Velocity(m/s)')
+plt.show()
 
 # VALIDATION
 Data_val = extractFromFile(validation_path)
@@ -137,23 +129,35 @@ Val_input = [Val_mic, Val_alpha]
 Result = PolyRegressor(Val_input, weight3[0], weight3[1], weight3[2], weight3[3], weight3[4], weight3[5], weight3[6],
                        weight3[7], weight3[8], weight3[9])
 Error = np.abs(Result - Val_Vel)
+Avg_Error = np.average(Error)
+Avg_spd = np.average(Val_Vel)
+Norm_error = (Avg_Error/Avg_spd) * 100
+print(Avg_Error, Norm_error)
 E30 = np.where(Val_engine == 30)
 E0 = np.where(Val_engine == 0)
 E_1 = np.where(Val_engine == -1)
 Error30 = Error[E30]
 Error0 = Error[E0]
 Error_1 = Error[E_1]
-plt.scatter(Val_alpha[E30], Error30, label="engine30")
-plt.scatter(Val_alpha[E0], Error0, label="engine0")
-plt.scatter(Val_alpha[E_1], Error_1, label="no prop")
-plt.legend()
-plt.xlabel("AoA")
-plt.ylabel("Error")
+
+fig = plt.figure()
+ax1 = fig.add_subplot()
+ax1.scatter(Val_alpha[E30], Error30, label="engine 30%", marker="1")
+ax1.scatter(Val_alpha[E0], Error0, label="engine 0%", marker="2")
+ax1.scatter(Val_alpha[E_1], Error_1, label="no propeller", marker="3")
+ax1.legend()
+ax1.set_title("Error Angle of Attack")
+ax1.set_xlabel("Velocity (m/s)")
+ax1.set_ylabel("Error (m/s)")
 plt.show()
-plt.scatter(Val_Vel[E30], Error30, label="engine30")
-plt.scatter(Val_Vel[E0], Error0, label="engine0")
-plt.scatter(Val_Vel[E_1], Error_1, label="no prop")
-plt.legend()
-plt.xlabel("Velocity")
-plt.ylabel("Error")
+
+fig = plt.figure()
+ax2 = fig.add_subplot()
+ax2.scatter(Val_Vel[E30], Error30, label="engine 30%", marker="1")
+ax2.scatter(Val_Vel[E0], Error0, label="engine 0%", marker="2")
+ax2.scatter(Val_Vel[E_1], Error_1, label="no propeller", marker="3")
+ax2.legend()
+ax2.set_title("Error Versus Velocity")
+ax2.set_xlabel("Velocity (m/s)")
+ax2.set_ylabel("Error (m/s)")
 plt.show()
