@@ -105,7 +105,7 @@ surf = ax.plot_trisurf(mic, alpha, regressor3, label='Approximation', alpha=0.9)
 surf._edgecolors2d = surf._edgecolor3d
 surf._facecolors2d = surf._facecolor3d
 ax.legend()
-ax.set_title('Velocity Regression')
+ax.set_title('Regression - All Engine Settings - Microphone Average')
 ax.set_xlabel('PSL')
 ax.set_ylabel('Angle of Attack(deg)')
 ax.set_zlabel('Velocity(m/s)')
@@ -129,6 +129,7 @@ Val_input = [Val_mic, Val_alpha]
 Result = PolyRegressor(Val_input, weight3[0], weight3[1], weight3[2], weight3[3], weight3[4], weight3[5], weight3[6],
                        weight3[7], weight3[8], weight3[9])
 Error = np.abs(Result - Val_Vel)
+# Error = Result - Val_Vel
 Avg_Error = np.average(Error)
 Avg_spd = np.average(Val_Vel)
 Norm_error = (Avg_Error/Avg_spd) * 100
@@ -146,8 +147,8 @@ ax1.scatter(Val_alpha[E30], Error30, label="engine 30%", marker="1")
 ax1.scatter(Val_alpha[E0], Error0, label="engine 0%", marker="2")
 ax1.scatter(Val_alpha[E_1], Error_1, label="no propeller", marker="3")
 ax1.legend()
-ax1.set_title("Error Angle of Attack")
-ax1.set_xlabel("Velocity (m/s)")
+ax1.set_title("Error Versus Angle of Attack")
+ax1.set_xlabel("Angle of Attack (deg)")
 ax1.set_ylabel("Error (m/s)")
 plt.show()
 
