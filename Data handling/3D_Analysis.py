@@ -106,7 +106,7 @@ surf._edgecolors2d = surf._edgecolor3d
 surf._facecolors2d = surf._facecolor3d
 ax.legend()
 ax.set_title('Regression - All Engine Settings - Microphone Average')
-ax.set_xlabel('PSL')
+ax.set_xlabel('SPL')
 ax.set_ylabel('Angle of Attack(deg)')
 ax.set_zlabel('Velocity(m/s)')
 plt.show()
