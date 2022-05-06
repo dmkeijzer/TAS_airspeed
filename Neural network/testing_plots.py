@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
 
-
-path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\TAS_airspeed\data_sets\plotting_data.csv"
+path = os.path.join(os.path.dirname(os.path.dirname(__file__)),  "data_sets\plotting_data.csv")
 df = pd.read_csv(path)
 
 def alpha_error_plot(ms= 5, col= "red"):
