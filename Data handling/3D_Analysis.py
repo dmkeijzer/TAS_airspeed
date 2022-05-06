@@ -69,7 +69,7 @@ regressor2 = PolyRegressor(inputarr2, weight2[0], weight2[1], weight2[2], weight
 regressor3 = PolyRegressor(inputarr3, weight3[0], weight3[1], weight3[2], weight3[3], weight3[4], weight3[5],
                            weight3[6], weight3[7], weight3[8], weight3[9])
 print('MSE', np.sqrt(mean_squared_error(Vel, regressor1)), np.sqrt(mean_squared_error(Vel, regressor2)),
-      np.sqrt(mean_squared_error(Vel, regressor3)))
+      (mean_squared_error(Vel, regressor3)))
 
 # fig = plt.figure(figsize=(8, 8))
 # ax = fig.add_subplot(projection='3d')
@@ -98,10 +98,10 @@ print('MSE', np.sqrt(mean_squared_error(Vel, regressor1)), np.sqrt(mean_squared_
 # ax.set_zlabel('Velocity')
 # plt.show()
 #
-fig = plt.figure(figsize=(8, 8))
+fig = plt.figure(figsize=(7, 7))
 ax = fig.add_subplot(projection='3d')
-ax.scatter(mic, alpha, Vel, color='red', label='Exact values', alpha=1)
-surf = ax.plot_trisurf(mic, alpha, regressor3, label='Approximation', alpha=0.9)
+ax.scatter(mic, alpha, Vel, color='red', label='Exact Velocities (m/s)', alpha=1)
+surf = ax.plot_trisurf(mic, alpha, regressor3, label='Calculated Velocities (m/s)', alpha=0.9)
 surf._edgecolors2d = surf._edgecolor3d
 surf._facecolors2d = surf._facecolor3d
 ax.legend()
@@ -128,8 +128,12 @@ Val_mic = (Val_mic1 + Val_mic2) / 2
 Val_input = [Val_mic, Val_alpha]
 Result = PolyRegressor(Val_input, weight3[0], weight3[1], weight3[2], weight3[3], weight3[4], weight3[5], weight3[6],
                        weight3[7], weight3[8], weight3[9])
-Error = np.abs(Result - Val_Vel)
-# Error = Result - Val_Vel
+
+Error = Result - Val_Vel
+STD = np.std(Error)
+Error = np.abs(Error)
+STD_abs = np.std(Error)
+print("STD:", STD, STD_abs)
 Avg_Error = np.average(Error)
 Avg_spd = np.average(Val_Vel)
 Norm_error = (Avg_Error/Avg_spd) * 100
