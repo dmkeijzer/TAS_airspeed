@@ -1,4 +1,5 @@
 import csv
+from venv import create
 import numpy as np
 import scipy.fft as scf
 import matplotlib.pyplot as plt
@@ -90,54 +91,56 @@ class trial_data:
         plt.show()
     
 
+
 def create_data_file(file_location, limiter = False): 
     """Creates a csv file of some key parameters of all the runs. The amount
     of files can be limited with the limiter parameter"""
 
-    data = []
+    data = np.ones((420003, 1))
 
     for counter, file in enumerate(os.listdir(file_path) , start=1):
         if counter == limiter: 
             break
             
-
+        
         run = trial_data(file)
         print(run.path)
-        data.append([run.engine, run.alpha, run.v, run.P_sum2, run.P_sum3, run.expect2, run.expect3, run.stdev2, run.stdev3, run.state_uav])
+        
+        arr = np.concatenate((run.y2[run.x < 14000], run.y3[run.x < 14000], [run.engine], [run.alpha], [run.v])).reshape(420003,1)
+        
+        data = np.append(data, arr, axis=1)
 
-        print('Sums', [run.P_sum2, run.P_sum3])
-        print('expectations', [run.expect2, run.expect3])
-        print('Stdev', [run.stdev2, run.stdev3])
+        print(np.shape(data))
     
-    #normalizing the necessary columns
+    data = np.delete(data, 0 ,axis=1)
     data = np.array(data)
-    
-    # data[:,0] = normalize(data[:,0].reshape(-1,1)).reshape(1,-1)
-    # data[:,1] = normalize(data[:,1].reshape(-1,1)).reshape(1,-1)
-    # data[:,2] = normalize(data[:,2].reshape(-1,1)).reshape(1,-1)
-    # data[:,3] = normalize(data[:,3].reshape(-1,1)).reshape(1,-1)
-    # data[:,4] = normalize(data[:,4].reshape(-1,1)).reshape(1,-1)
-    # data[:,5] = normalize(data[:,5].reshape(-1,1)).reshape(1,-1)
-    # data[:,6] = normalize(data[:,6].reshape(-1,1)).reshape(1,-1)
-    # data[:,7] = normalize(data[:,7].reshape(-1,1)).reshape(1,-1)
-    # data[:,8] = normalize(data[:,8].reshape(-1,1)).reshape(1,-1)
 
     #Writing it to csv
 
-    df = pd.DataFrame(data, columns= ["engine", "alpha", "v", "sum2", "sum3", "expect2", "expect3","stdev2", "stdev3", "state_uav"])
-    df.to_csv(file_location + "\data_list1.csv", index_label= "index")
+    df = pd.DataFrame(data)
+    df.to_csv(os.path.realpath(file_location + "\\tensor_file.csv"), index_label= "index")
 
-create_data_file(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data")
+
 
 def plot_frequency_domain():
     files.reverse()
-    for i in range(len(files)):
-        run = trial_data(files[i])
-        plt.plot(run.x, run.y2, label = str(run.v))
+    for i in files:
+        path = i.split("_")
+        print(path[3])
+        print(path[2])
+        if path[3] == "0alpha" and path[2].lower() == 'engine30':
+            print("computing\n")
+            run = trial_data(i)
+            plt.plot(run.x, run.y2, label = str(run.v) + " [m/s]")
+            continue
+        print('skipped\n') 
+        
     plt.xlabel('Frequency')
     plt.ylabel('Amplitude')
     plt.legend()
     plt.show()
+
+
 
 
 
