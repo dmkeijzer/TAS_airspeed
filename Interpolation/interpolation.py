@@ -6,9 +6,10 @@ import os
 import sys
 import pandas as pd
 import seaborn as sns
+import tensorflow as tf
+import keras as k
 
-
-array = pd.read_csv(r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\Interpolation\data_list.csv")
+# array = pd.read_csv(r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\Interpolation\data_list.csv")
 array2 = array.drop([42,43,44], axis=0)
 
 array2["log_sum2"] = np.log10(array2["sum2"])
