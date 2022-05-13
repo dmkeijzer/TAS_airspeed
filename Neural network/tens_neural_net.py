@@ -8,7 +8,8 @@ from tensorflow.keras import layers
 
 path = r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\data_sets\tensor_file.csv"
 
-df_tens = pd.read_csv(path)
+df_tens = pd.read_csv(path).to_numpy()
+df_tens = np.delete(df_tens, 0, axis=1)
 
 
 model = keras.Sequential(
@@ -25,17 +26,17 @@ y = model(x)
 model.summary()
 
 x_sets = df_tens[:-1,:]
-x_train = x_sets[:,:102]
-x_test = x_sets[:,102:]
+x_eval = x_sets[:,:102]
+x_test = x_sets[:,102:].transpose()
 
 y_sets = df_tens[-1,:]
-y_train = y_sets[:,:102]
-y_test = y_sets[:,102:]
+y_eval= y_sets[:102]
+y_test = y_sets[102:].transpose()
 
-x_val = x_train[:,:89]
-x_train = x_train[:,89:]
-y_val = y_train[:,:89]
-y_train = y_train[:,89:]
+x_val = x_eval[:,89:].transpose()
+x_train = x_eval[:,:89].transpose()
+y_val = y_eval[89:].transpose()
+y_train = y_eval[:89].transpose()
 
 opt = keras.optimizers.Adam(learning_rate=0.001)
 loss = keras.losses.MeanSquaredError(reduction="auto", name="mean_squared_error")
@@ -63,6 +64,7 @@ history = model.fit(
 model.save(r'C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\Neural network\Model')
 
 
+pass
 
 
 
