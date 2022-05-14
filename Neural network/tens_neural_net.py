@@ -6,39 +6,45 @@ import matplotlib as plt
 from tensorflow import keras
 from tensorflow.keras import layers
 
-path = r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\data_sets\tensor_file.csv"
+path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\tensor_file.csv"
 
 df_tens = pd.read_csv(path).to_numpy()
 df_tens = np.delete(df_tens, 0, axis=1)
+df_tens = df_tens.transpose()
 
 
 model = keras.Sequential(
     [
-        layers.Dense(25, activation="sigmoid", name="Dense_1", input_shape=(420002,1)),
+        layers.Dense(25, activation="sigmoid", name="Dense_1", input_shape=(420003,)), #TODO figure out what inputs it wants
         layers.Dense(10, name="Dense_2"),
         layers.Dense(1, name="Dense_3"),
     ]
 )
+model.summary()
+print("\n \nTest input\n #================================================================================================ \n")
+print(model.weights, "\n")
 
-x = tf.ones((420002,1))
+x = tf.ones((1, 420003)) # TODO fix the input of this and figure out what input it wants
 y = model(x)
 
+
+print(f"result of only ones = {y} \n #============================================================================================================== \n \n ")
 model.summary()
+print("\n \n")
 
 x_sets = df_tens[:-1,:]
-x_eval = x_sets[:,:102]
-x_test = x_sets[:,102:].transpose()
+x_eval = x_sets[102:,:]
+x_test = x_sets[:102,:]
 
-y_sets = df_tens[-1,:]
-y_eval= y_sets[:102]
-y_test = y_sets[102:].transpose()
+y_sets = df_tens[:,-1].flatten()
+y_eval= y_sets[102:]
+y_test = y_sets[0:102]
 
-x_val = x_eval[:,89:].transpose()
-x_train = x_eval[:,:89].transpose()
-y_val = y_eval[89:].transpose()
-y_train = y_eval[:89].transpose()
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
+x_train = x_test[:89,:]
+y_train = y_test[0:89]
+
+opt = keras.optimizers.Adam(learning_rate=0.001, beta_1= 0.2, beta_2 = 0.2)
 loss = keras.losses.MeanSquaredError(reduction="auto", name="mean_squared_error")
 mtr = keras.metrics.MeanSquaredError(name="mean_squared_error", dtype=None)
 
@@ -52,13 +58,14 @@ model.compile(
     metrics=[mtr],
 )
 
-print("Fit model on training data")
+print("\nFit model on training data\n")
 history = model.fit(
-    x_train,
-    y_train,
-    batch_size=60,
+    x_test,
+    y_test,
+    batch_size=20,
     epochs=200,
-    validation_data=(x_val, y_val),
+    shuffle= True,
+    validation_split=0.2, #TODO figure out what inputs it wants
 )
 
 model.save(r'C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\Neural network\Model')
