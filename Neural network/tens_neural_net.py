@@ -43,11 +43,13 @@ y_eval= y_sets[102:]
 y_test = y_sets[0:102]
 
 
-x_train = x_test[:89,:]
-y_train = y_test[0:89]
+# x_train = x_test[:89,:]
+# y_train = y_test[0:89]
 
-opt = keras.optimizers.Adam(learning_rate=0.001, beta_1= 0.7, beta_2 = 0.7)
-opt2 = keras.optimizers.SGD(lr=0.1, decay=1e-6, momentum=0.2, nesterov=True)
+opt = keras.optimizers.Adam(learning_rate=0.001, beta_1= 0.9, beta_2 = 0.9)
+opt1 = keras.optimizers.Nadam(learning_rate=0.001, beta_1=0.7, beta_2=0.7, epsilon=1e-07, name="Nadam")
+opt2 = keras.optimizers.SGD(lr=1, decay=1e-6, momentum=0.2, nesterov=True)
+opt3 = keras.optimizers.Adadelta(learning_rate=0.001, rho=0.95, epsilon=1e-07, name="Adadelta")
 loss = keras.losses.MeanSquaredError(reduction="auto", name="mean_squared_error")
 mtr = keras.metrics.MeanSquaredError(name="mean_squared_error", dtype=None)
 
@@ -65,8 +67,8 @@ print("\nFit model on training data\n")
 history = model.fit(
     x_test,
     y_test,
-    batch_size=20,
-    epochs=200,
+    batch_size=15, #smaller batches seem to give better results so try that I guess
+    epochs=500,
     shuffle= True,
     validation_split=0.2, #TODO figure out what inputs it wants
 )
