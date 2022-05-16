@@ -15,14 +15,16 @@ df_tens = df_tens.transpose()
 
 model = keras.Sequential(
     [
-        layers.Dense(25, activation="sigmoid", name="Dense_1", input_shape=(420003,)), #TODO figure out what inputs it wants
-        layers.Dense(10, name="Dense_2"),
+        layers.Dense(30, name="Dense_2" , input_shape=(420003,)),
+        layers.BatchNormalization(),
+        layers.Dense(50, activation="sigmoid", name="Dense_1"), 
+        layers.Dense(30, activation="sigmoid", name="Dense_4"), 
         layers.Dense(1, name="Dense_3"),
     ]
 )
-model.summary()
+
 print("\n \nTest input\n #================================================================================================ \n")
-print(model.weights, "\n")
+
 
 x = tf.ones((1, 420003)) # TODO fix the input of this and figure out what input it wants
 y = model(x)
@@ -44,7 +46,8 @@ y_test = y_sets[0:102]
 x_train = x_test[:89,:]
 y_train = y_test[0:89]
 
-opt = keras.optimizers.Adam(learning_rate=0.001, beta_1= 0.2, beta_2 = 0.2)
+opt = keras.optimizers.Adam(learning_rate=0.001, beta_1= 0.7, beta_2 = 0.7)
+opt2 = keras.optimizers.SGD(lr=0.1, decay=1e-6, momentum=0.2, nesterov=True)
 loss = keras.losses.MeanSquaredError(reduction="auto", name="mean_squared_error")
 mtr = keras.metrics.MeanSquaredError(name="mean_squared_error", dtype=None)
 
