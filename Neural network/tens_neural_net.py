@@ -15,7 +15,7 @@ df_tens = df_tens.transpose()
 
 model = keras.Sequential(
     [
-        layers.Dense(30, name="Dense_2" , input_shape=(420003,)),
+        layers.Dense(30, name="Dense_2" , input_shape=(420002,)),
         layers.BatchNormalization(),
         layers.Dense(50, activation="sigmoid", name="Dense_1"), 
         layers.Dense(30, activation="sigmoid", name="Dense_4"), 
@@ -26,7 +26,7 @@ model = keras.Sequential(
 print("\n \nTest input\n #================================================================================================ \n")
 
 
-x = tf.ones((1, 420003)) # TODO fix the input of this and figure out what input it wants
+x = tf.ones((1, 420002)) # TODO fix the input of this and figure out what input it wants
 y = model(x)
 
 
@@ -34,12 +34,12 @@ print(f"result of only ones = {y} \n #==========================================
 model.summary()
 print("\n \n")
 
-x_sets = df_tens[:-1,:]
-x_eval = x_sets[102:,:]
-x_test = x_sets[:102,:]
+x_sets = df_tens[:,:-1]
+x_eval = x_sets[102:130,:]
+x_test = x_sets[0:102,:]
 
-y_sets = df_tens[:,-1].flatten()
-y_eval= y_sets[102:]
+y_sets = df_tens[:,-1]
+y_eval= y_sets[102:130]
 y_test = y_sets[0:102]
 
 
@@ -52,6 +52,7 @@ opt2 = keras.optimizers.SGD(lr=1, decay=1e-6, momentum=0.2, nesterov=True)
 opt3 = keras.optimizers.Adadelta(learning_rate=0.001, rho=0.95, epsilon=1e-07, name="Adadelta")
 loss = keras.losses.MeanSquaredError(reduction="auto", name="mean_squared_error")
 mtr = keras.metrics.MeanSquaredError(name="mean_squared_error", dtype=None)
+mtr1 = tf.keras.metrics.MeanAbsoluteError(name ="Mean_absolute_error")
 
 
 
@@ -60,7 +61,7 @@ model.compile(
     # Loss function to minimize
     loss = loss,
     # List of metrics to monitor
-    metrics=[mtr],
+    metrics=[mtr1],
 )
 
 print("\nFit model on training data\n")
@@ -72,6 +73,11 @@ history = model.fit(
     shuffle= True,
     validation_split=0.2, #TODO figure out what inputs it wants
 )
+
+# Evaluate the model on the test data using `evaluate`
+print("\nEvaluate on test data\n")
+results = model.evaluate(x_eval, y_eval, batch_size=100)
+print("test loss, test metrics:", results)
 
 model.save(r'C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\Neural network\Model')
 
