@@ -11,6 +11,8 @@ file_path = r"C:\Users\Max Reinhard\Documents\BSc2 AE\Semester 2\Test, analysis 
 # regression = []
 validation_path = r"C:\Users\Max Reinhard\Documents\BSc2 AE\Semester 2\Test, analysis and simulation\TAS_airspeed\data_sets\data_list_validation.csv"
 
+op_test = r""
+
 
 def extractFromFile(path):  # Function extracts the column the data from the csv in the form of a transpose dataframe
     data_set = pd.read_csv(path, sep=",", header=None)
@@ -59,9 +61,9 @@ inputarr3 = [mic, alpha]
 weight1, pcov1 = sp.curve_fit(PolyRegressor, inputarr1, Vel)
 weight2, pcov2 = sp.curve_fit(PolyRegressor, inputarr2, Vel)
 weight3, pcov3 = sp.curve_fit(PolyRegressor, inputarr3, Vel)
-print(weight1)
-print(weight2)
-print(weight3)
+# print(weight1)
+# print(weight2)
+# print(weight3)
 regressor1 = PolyRegressor(inputarr1, weight1[0], weight1[1], weight1[2], weight1[3], weight1[4], weight1[5],
                            weight1[6], weight1[7], weight1[8], weight1[9])
 regressor2 = PolyRegressor(inputarr2, weight2[0], weight2[1], weight2[2], weight2[3], weight2[4], weight2[5],
@@ -98,18 +100,20 @@ print('MSE', np.sqrt(mean_squared_error(Vel, regressor1)), np.sqrt(mean_squared_
 # ax.set_zlabel('Velocity')
 # plt.show()
 #
-fig = plt.figure(figsize=(7, 7))
-ax = fig.add_subplot(projection='3d')
-ax.scatter(mic, alpha, Vel, color='red', label='Exact Velocities (m/s)', alpha=1)
-surf = ax.plot_trisurf(mic, alpha, regressor3, label='Calculated Velocities (m/s)', alpha=0.9)
-surf._edgecolors2d = surf._edgecolor3d
-surf._facecolors2d = surf._facecolor3d
-ax.legend()
-ax.set_title('Regression - All Engine Settings - Microphone Average')
-ax.set_xlabel('SPL')
-ax.set_ylabel('Angle of Attack(deg)')
-ax.set_zlabel('Velocity(m/s)')
-plt.show()
+
+# MAIN PLOT BELOW. UNCOMMENT WHEN GETTING FINAL PLOTS
+# fig = plt.figure(figsize=(7, 7))
+# ax = fig.add_subplot(projection='3d')
+# ax.scatter(mic, alpha, Vel, color='red', label='Exact Velocities (m/s)', alpha=1)
+# surf = ax.plot_trisurf(mic, alpha, regressor3, label='Calculated Velocities (m/s)', alpha=0.9)
+# surf._edgecolors2d = surf._edgecolor3d
+# surf._facecolors2d = surf._facecolor3d
+# ax.legend()
+# ax.set_title('Regression - All Engine Settings - Microphone Average')
+# ax.set_xlabel('SPL')
+# ax.set_ylabel('Angle of Attack(deg)')
+# ax.set_zlabel('Velocity(m/s)')
+# plt.show()
 
 # VALIDATION
 Data_val = extractFromFile(validation_path)
@@ -136,7 +140,7 @@ STD_abs = np.std(Error)
 print("STD:", STD, STD_abs)
 Avg_Error = np.average(Error)
 Avg_spd = np.average(Val_Vel)
-Norm_error = (Avg_Error/Avg_spd) * 100
+Norm_error = (Avg_Error / Avg_spd) * 100
 print(Avg_Error, Norm_error)
 E30 = np.where(Val_engine == 30)
 E0 = np.where(Val_engine == 0)
@@ -147,9 +151,9 @@ Error_1 = Error[E_1]
 
 fig = plt.figure()
 ax1 = fig.add_subplot()
-ax1.scatter(Val_alpha[E30], Error30, label="engine 30%", marker="1")
-ax1.scatter(Val_alpha[E0], Error0, label="engine 0%", marker="2")
-ax1.scatter(Val_alpha[E_1], Error_1, label="no propeller", marker="3")
+ax1.scatter(Val_alpha[E30], Error30, s=100, label="engine 30%", marker="1")
+ax1.scatter(Val_alpha[E0], Error0, s=100, label="engine 0%", marker="2")
+ax1.scatter(Val_alpha[E_1], Error_1, s=100, label="no propeller", marker="3")
 ax1.legend()
 ax1.set_title("Error Versus Angle of Attack")
 ax1.set_xlabel("Angle of Attack (deg)")
@@ -158,11 +162,30 @@ plt.show()
 
 fig = plt.figure()
 ax2 = fig.add_subplot()
-ax2.scatter(Val_Vel[E30], Error30, label="engine 30%", marker="1")
-ax2.scatter(Val_Vel[E0], Error0, label="engine 0%", marker="2")
-ax2.scatter(Val_Vel[E_1], Error_1, label="no propeller", marker="3")
+ax2.scatter(Val_Vel[E30], Error30, s=100, label="engine 30%", marker="1")
+ax2.scatter(Val_Vel[E0], Error0, s=100, label="engine 0%", marker="2")
+ax2.scatter(Val_Vel[E_1], Error_1, s=100, label="no propeller", marker="3")
 ax2.legend()
 ax2.set_title("Error Versus Velocity")
 ax2.set_xlabel("Velocity (m/s)")
 ax2.set_ylabel("Error (m/s)")
 plt.show()
+
+# TESTING THE MODEL WITH THE SHORT CLIPS
+
+Data_op = extractFromFile(op_test)
+
+Data_op = pd.DataFrame.to_numpy(Data_op)
+Data_op = np.delete(Data_op, 0, 1)
+Data_op = np.delete(Data_op, 0, 0)
+
+op_alpha = pd.to_numeric(Data_op[0:, 1])
+op_engine = pd.to_numeric(Data_op[0:, 0])
+op_Vel = pd.to_numeric(Data_op[0:, 2])
+op_mic1 = pd.to_numeric(Data_op[0:, 3])
+op_mic2 = pd.to_numeric(Data_op[0:, 4])
+op_mic = (op_mic1 + op_mic2) / 2
+
+op_input = [op_mic, op_alpha]
+Result = PolyRegressor(op_input, weight3[0], weight3[1], weight3[2], weight3[3], weight3[4], weight3[5], weight3[6],
+                       weight3[7], weight3[8], weight3[9])
