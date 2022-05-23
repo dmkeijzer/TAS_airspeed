@@ -19,7 +19,7 @@ class trial_data:
     
     """ This class allows convenient access to all data from chosen excel. Methods can be added accordingly. """
     
-    def __init__(self, path):
+    def __init__(self, path, transf = True):
         self.df = pd.read_csv(path)
         self.path = path.split("_")
         self.mic_1 = self.df.loc[:, "m1"].values #voltage values from mic 1
@@ -27,31 +27,32 @@ class trial_data:
         self.mic_3 = self.df.loc[:, "m3"].values #voltage values from mic 3
         self.time_arr = self.df.loc[:,"m1_Time*"].values #series containing all time points
         
+        if transf:
         #switching to frequency domain
-        self.x = scf.rfftfreq(len(self.time_arr), self.time_arr[1])
-        self.y2 = np.abs(scf.rfft(self.mic_2))
-        self.y3 = np.abs(scf.rfft(self.mic_3))
-        #self.x = (self.x < 14000) * self.x
-        #self.y2 = (self.x < 14000) * self.y2
-        #self.y3 = (self.x < 14000) * self.y3
-        
-        #cleaning the weird peaks from the data
-        
-        self.y2 = abs(((self.y2 > 20) * (30 < self.x) * (self.x < 70))-1) * self.y2
-        self.y3 = abs(((self.y3 > 20) * (30 < self.x) * (self.x < 70))-1) * self.y3
-        self.y2 = (self.y2 < 100) * self.y2
-        self.y3 = (self.y3 < 100) * self.y3
-        
-        radius = 10       
-        for i in range(1, int(self.x[-1] / 50)):
-            self.y2 = abs(((self.y2 > 20) * (50 * i - radius < self.x) * (self.x < 50 * i + radius))-1) * self.y2
-            self.y3 = abs(((self.y3 > 20) * (50 * i - radius < self.x) * (self.x < 50 * i + radius))-1) * self.y3
-        self.P_sum2 = np.sum(self.y2)
-        self.P_sum3 = np.sum(self.y3)
-        self.expect2 = np.dot(self.x, self.y2) / (np.sum(self.y2))
-        self.expect3 = np.dot(self.x, self.y3) / (np.sum(self.y3))
-        self.stdev2 = np.std(self.y2)
-        self.stdev3 = np.std(self.y3)
+            self.x = scf.rfftfreq(len(self.time_arr), self.time_arr[1])
+            self.y2 = np.abs(scf.rfft(self.mic_2))
+            self.y3 = np.abs(scf.rfft(self.mic_3))
+            #self.x = (self.x < 14000) * self.x
+            #self.y2 = (self.x < 14000) * self.y2
+            #self.y3 = (self.x < 14000) * self.y3
+            
+            #cleaning the weird peaks from the data
+            
+            self.y2 = abs(((self.y2 > 20) * (30 < self.x) * (self.x < 70))-1) * self.y2
+            self.y3 = abs(((self.y3 > 20) * (30 < self.x) * (self.x < 70))-1) * self.y3
+            self.y2 = (self.y2 < 100) * self.y2
+            self.y3 = (self.y3 < 100) * self.y3
+            
+            radius = 10       
+            for i in range(1, int(self.x[-1] / 50)):
+                self.y2 = abs(((self.y2 > 20) * (50 * i - radius < self.x) * (self.x < 50 * i + radius))-1) * self.y2
+                self.y3 = abs(((self.y3 > 20) * (50 * i - radius < self.x) * (self.x < 50 * i + radius))-1) * self.y3
+            self.P_sum2 = np.sum(self.y2)
+            self.P_sum3 = np.sum(self.y3)
+            self.expect2 = np.dot(self.x, self.y2) / (np.sum(self.y2))
+            self.expect3 = np.dot(self.x, self.y3) / (np.sum(self.y3))
+            self.stdev2 = np.std(self.y2)
+            self.stdev3 = np.std(self.y3)
 
         #recognizing what the input parameters are for current run
 
@@ -120,6 +121,33 @@ def create_data_file(file_location, limiter = False):
     df = pd.DataFrame(data)
     df.to_csv(os.path.realpath(file_location + "\\tensor_file.csv"), index_label= "index")
 
+def create_raw_data_file(file_location, limiter= False):
+    slice = 7000
+    start = int(1e5)
+    end = int(start + slice)
+    data = np.ones((7003, 1))
+
+    for counter, file in enumerate(os.listdir(file_path) , start=1):
+        if counter == limiter: 
+            break
+            
+        
+        run = trial_data(file, transf=False)
+        print(run.path)
+        
+        arr = np.concatenate((run.mic_2[start:slice], run.mic_3[start:end], [run.engine], [run.alpha], [run.v])).reshape(-1,1)
+        
+        data = np.append(data, arr, axis=1)
+
+        print(np.shape(data))
+    
+    data = np.delete(data, 0 ,axis=1)
+    data = np.array(data)
+
+    #Writing it to csv
+
+    df = pd.DataFrame(data)
+    df.to_csv(os.path.realpath(file_location + "\\tensor_file_raw1.csv"), index_label= "index")
 
 
 def plot_frequency_domain():
@@ -140,6 +168,8 @@ def plot_frequency_domain():
     plt.legend()
     plt.show()
 
+
+create_raw_data_file(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data")
 
 
 
