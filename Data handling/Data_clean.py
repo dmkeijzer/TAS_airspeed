@@ -36,6 +36,7 @@ class trial_data:
         for i in range(1, int(self.x[-1] / 50)):
             self.y2 = abs(((self.y2 > 20) * (50 * i - 5 < self.x) * (self.x < 50 * i + 5))-1) * self.y2
             self.y3 = abs(((self.y3 > 20) * (50 * i - 5 < self.x) * (self.x < 50 * i + 5))-1) * self.y3
+
         self.P_sum2 = np.sum(self.y2)
         self.P_sum3 = np.sum(self.y3)
         self.mean2 = np.mean(self.y2)
@@ -100,7 +101,7 @@ def create_data_file(file_location, limiter = False):
     df = pd.DataFrame(data, columns= ["engine", "alpha", "v", "sum2", "sum3", "mean2", "mean3","stdev2", "stdev3"])
     df.to_csv(file_location + "\data_list.csv")
 
-create_data_file(file_location=r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data")
+run = trial_data()
 
 
 
