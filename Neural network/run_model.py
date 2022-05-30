@@ -2,13 +2,13 @@ import os
 import tensorflow as tf
 import numpy as np
 import pandas as pd
-import matplotlib as plt
+import matplotlib.pyplot as plt
 from tensorflow import keras
 from tensorflow.keras import layers
 
-model = keras.models.load_model(r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\Neural network\Model")
+model = keras.models.load_model(r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\Neural network\Model_freq")
 
-path = r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\data_sets\tensor_file_raw1.csv"
+path = r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\data_sets\tensor_file.csv"
 
 df_tens = pd.read_csv(path).to_numpy()
 df_tens = np.delete(df_tens, 0, axis=1)
@@ -32,4 +32,7 @@ predictions = model.predict(x_sets)
 results = pd.DataFrame(predictions, columns=["estimated values"])
 results["true speed"] = y_sets
 
-print("predictions shape:", results)
+print("predictions:", results)
+
+plt.scatter(results["true speed"], results["estimated values"])
+plt.show()
