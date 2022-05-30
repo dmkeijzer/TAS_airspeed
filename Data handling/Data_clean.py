@@ -122,32 +122,32 @@ def create_data_file(file_location, limiter = False):
     df.to_csv(os.path.realpath(file_location + "\\tensor_file.csv"), index_label= "index")
 
 def create_raw_data_file(file_location, limiter= False):
-    slice = 7000
-    start = int(1e5)
-    end = int(start + slice)
-    data = np.ones((7003, 1))
+    slice = 7680
+    data = np.ones((1, int(2 * slice + 3)))
 
     for counter, file in enumerate(os.listdir(file_path) , start=1):
+        start = 0
+
         if counter == limiter: 
             break
-            
-        
-        run = trial_data(file, transf=False)
-        print(run.path)
-        
-        arr = np.concatenate((run.mic_2[start:slice], run.mic_3[start:end], [run.engine], [run.alpha], [run.v])).reshape(-1,1)
-        
-        data = np.append(data, arr, axis=1)
 
-        print(np.shape(data))
+        for i in range(99):    
+            run = trial_data(file, transf=False)
+            arr = np.concatenate((run.mic_2[start:int(start + slice)], run.mic_3[start:int(start + slice)], [run.engine], [run.alpha], [run.v])).reshape(1,-1)
+            data = np.append(data, arr, axis=0)
+            start += slice
+            
+            print(run.path)
+            print(np.shape(data))
+            print(f"slice {start} to {start + slice}\n")
     
-    data = np.delete(data, 0 ,axis=1)
+    data = np.delete(data, 0 , axis=0)
     data = np.array(data)
 
     #Writing it to csv
 
     df = pd.DataFrame(data)
-    df.to_csv(os.path.realpath(file_location + "\\tensor_file_raw1.csv"), index_label= "index")
+    df.to_csv(os.path.realpath(file_location + "\\tensor_file_raw_slice015.csv"), index_label= "index")
 
 
 def plot_frequency_domain():
