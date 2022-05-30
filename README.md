@@ -8,7 +8,7 @@ This repository contains all code from test, analysis and simulation group C4 fo
 - Branching is an excellent way to work in parrallel
 
 I think those are the most important ones, feel free to add some rules and tips! And of course have fun!
-#git commands
+# git commands
 
 Git status
 Git push / git push –u {remote} {branch}
