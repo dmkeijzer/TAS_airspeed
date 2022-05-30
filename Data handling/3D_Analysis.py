@@ -11,7 +11,10 @@ file_path = r"C:\Users\Max Reinhard\Documents\BSc2 AE\Semester 2\Test, analysis 
 # regression = []
 validation_path = r"C:\Users\Max Reinhard\Documents\BSc2 AE\Semester 2\Test, analysis and simulation\TAS_airspeed\data_sets\data_list_validation.csv"
 
-#op_test = r""
+op_test = r"C:\Users\Max Reinhard\Documents\BSc2 AE\Semester 2\Test, analysis and simulation\TAS_airspeed\data_sets\Op_validation.csv"
+
+op_step = 1
+tr_step = 1
 
 
 def extractFromFile(path):  # Function extracts the column the data from the csv in the form of a transpose dataframe
@@ -52,7 +55,7 @@ engine = pd.to_numeric(Data_main[0:, 0])
 Vel = pd.to_numeric(Data_main[0:, 2])
 mic1 = pd.to_numeric(Data_main[0:, 3])
 mic2 = pd.to_numeric(Data_main[0:, 4])
-mic = (mic1 + mic2) / 2
+mic = (mic1 + mic2) / (2 * tr_step)
 # index = np.where(mic2 == max(mic2))
 # print(alpha[index], engine[index], Vel[index])
 inputarr1 = [mic1, alpha]
@@ -178,13 +181,13 @@ Data_op = extractFromFile(op_test)
 Data_op = pd.DataFrame.to_numpy(Data_op)
 Data_op = np.delete(Data_op, 0, 1)
 Data_op = np.delete(Data_op, 0, 0)
-
-op_alpha = pd.to_numeric(Data_op[0:, 1])
-op_engine = pd.to_numeric(Data_op[0:, 0])
-op_Vel = pd.to_numeric(Data_op[0:, 2])
-op_mic1 = pd.to_numeric(Data_op[0:, 3])
-op_mic2 = pd.to_numeric(Data_op[0:, 4])
-op_mic = (op_mic1 + op_mic2) / 2
+print(Data_op)
+op_alpha = pd.to_numeric(Data_op[0:, 2])
+op_engine = pd.to_numeric(Data_op[0:, 1])
+op_Vel = pd.to_numeric(Data_op[0:, 3])
+op_mic1 = pd.to_numeric(Data_op[0:, 4])
+op_mic2 = pd.to_numeric(Data_op[0:, 5])
+op_mic = (op_mic1 + op_mic2) / (2*op_step)
 
 op_input = [op_mic, op_alpha]
 Result_op = PolyRegressor(op_input, weight3[0], weight3[1], weight3[2], weight3[3], weight3[4], weight3[5], weight3[6],
@@ -196,7 +199,6 @@ Error_op = np.abs(Error_op)
 STD_op_abs = np.std(Error_op)
 print("STD:", STD_op, STD_op_abs)
 Avg_Error_op = np.average(Error_op)
-
 
 fig = plt.figure()
 ax3 = fig.add_subplot()
