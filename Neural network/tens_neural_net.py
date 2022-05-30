@@ -3,7 +3,7 @@ from matplotlib.pyplot import axis
 import tensorflow as tf
 import numpy as np
 import pandas as pd
-import matplotlib as plt
+import matplotlib.pyplot as plt
 from tensorflow import keras
 from tensorflow.keras import layers
 import h5py
@@ -12,7 +12,7 @@ df_tens = np.ones((1,15363))
 
 if __name__ == "__main__":
 
-    path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\tensor_file_raw_slice015.csv"
+    path = r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\data_sets\tensor_file_raw_slice015.csv"
     print("started opening")
     ch_size = 3000
     load_counter = 0
@@ -105,7 +105,17 @@ if __name__ == "__main__":
     results = model.evaluate(x_eval, y_eval, batch_size=6)
     print("test loss, test metrics:", results)
 
-    model.save(r'C:\Users\damie\OneDrive\Desktop\Damien\TAS\Keras_model\model_raw_split1')
+    def plot_history(history, key):
+        plt.plot(history.history[key])
+        plt.plot(history.history['val_'+key])
+        plt.xlabel("Epochs")
+        plt.ylabel(key)
+        plt.legend([key, 'val_'+key])
+        plt.show()
+
+    plot_history(history, 'Mean_absolute_error')
+
+    model.save(r'C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\Neural network\Model_time')
 
 
 
