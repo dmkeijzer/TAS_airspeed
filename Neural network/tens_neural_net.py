@@ -12,7 +12,7 @@ df_tens = np.ones((1,15363))
 
 if __name__ == "__main__":
 
-    path = r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\data_sets\tensor_file_raw_slice015.csv"
+    path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\tensor_file_raw_slice015.csv"
     print("started opening")
     ch_size = 3000
     load_counter = 0
@@ -81,7 +81,11 @@ if __name__ == "__main__":
     opt6 = keras.optimizers.Ftrl(    learning_rate=0.001,learning_rate_power=-0.5,initial_accumulator_value=0.1, l1_regularization_strength=0.0,  \
     l2_regularization_strength=0.0,name="Ftrl",l2_shrinkage_regularization_strength=0.0,beta=0.0)
 
-    loss = keras.losses.MeanSquaredError(reduction="auto", name="mean_squared_error")
+    loss1 = keras.losses.MeanSquaredError(reduction="auto", name="mean_squared_error")
+    loss2 = keras.losses.huber(delta=1.0)
+    loss3 = keras.losses.MeanSquaredLogarithmicError(reduction="auto", name="mean_squared_logarithmic_error")
+
+
     mtr = keras.metrics.MeanSquaredError(name="mean_squared_error", dtype=None)
     mtr1 = tf.keras.metrics.MeanAbsoluteError(name ="Mean_absolute_error")
 
@@ -90,7 +94,7 @@ if __name__ == "__main__":
     model.compile(
         optimizer = opt,  # Optimizer
         # Loss function to minimize
-        loss = loss,
+        loss = loss1,
         # List of metrics to monitor
         metrics=[mtr1],
     )
@@ -120,7 +124,9 @@ if __name__ == "__main__":
 
     plot_history(history, 'Mean_absolute_error')
 
-    model.save(r'C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\Neural network\Model_time')
+
+    
+    model.save(r'C:\Users\damie\OneDrive\Desktop\Damien\TAS\Keras_model\Model')
 
 
 
