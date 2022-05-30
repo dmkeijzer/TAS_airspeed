@@ -11,7 +11,7 @@ file_path = r"C:\Users\Max Reinhard\Documents\BSc2 AE\Semester 2\Test, analysis 
 # regression = []
 validation_path = r"C:\Users\Max Reinhard\Documents\BSc2 AE\Semester 2\Test, analysis and simulation\TAS_airspeed\data_sets\data_list_validation.csv"
 
-op_test = r""
+#op_test = r""
 
 
 def extractFromFile(path):  # Function extracts the column the data from the csv in the form of a transpose dataframe
@@ -116,60 +116,60 @@ print('MSE', np.sqrt(mean_squared_error(Vel, regressor1)), np.sqrt(mean_squared_
 # plt.show()
 
 # VALIDATION
-Data_val = extractFromFile(validation_path)
-
-Data_val = pd.DataFrame.to_numpy(Data_val)
-Data_val = np.delete(Data_val, 0, 1)
-Data_val = np.delete(Data_val, 0, 0)
-
-Val_alpha = pd.to_numeric(Data_val[0:, 1])
-Val_engine = pd.to_numeric(Data_val[0:, 0])
-Val_Vel = pd.to_numeric(Data_val[0:, 2])
-Val_mic1 = pd.to_numeric(Data_val[0:, 3])
-Val_mic2 = pd.to_numeric(Data_val[0:, 4])
-Val_mic = (Val_mic1 + Val_mic2) / 2
-
-Val_input = [Val_mic, Val_alpha]
-Result = PolyRegressor(Val_input, weight3[0], weight3[1], weight3[2], weight3[3], weight3[4], weight3[5], weight3[6],
-                       weight3[7], weight3[8], weight3[9])
-
-Error = Result - Val_Vel
-STD = np.std(Error)
-Error = np.abs(Error)
-STD_abs = np.std(Error)
-print("STD:", STD, STD_abs)
-Avg_Error = np.average(Error)
-Avg_spd = np.average(Val_Vel)
-Norm_error = (Avg_Error / Avg_spd) * 100
-print(Avg_Error, Norm_error)
-E30 = np.where(Val_engine == 30)
-E0 = np.where(Val_engine == 0)
-E_1 = np.where(Val_engine == -1)
-Error30 = Error[E30]
-Error0 = Error[E0]
-Error_1 = Error[E_1]
-
-fig = plt.figure()
-ax1 = fig.add_subplot()
-ax1.scatter(Val_alpha[E30], Error30, s=100, label="engine 30%", marker="1")
-ax1.scatter(Val_alpha[E0], Error0, s=100, label="engine 0%", marker="2")
-ax1.scatter(Val_alpha[E_1], Error_1, s=100, label="no propeller", marker="3")
-ax1.legend()
-ax1.set_title("Error Versus Angle of Attack")
-ax1.set_xlabel("Angle of Attack (deg)")
-ax1.set_ylabel("Error (m/s)")
-plt.show()
-
-fig = plt.figure()
-ax2 = fig.add_subplot()
-ax2.scatter(Val_Vel[E30], Error30, s=100, label="engine 30%", marker="1")
-ax2.scatter(Val_Vel[E0], Error0, s=100, label="engine 0%", marker="2")
-ax2.scatter(Val_Vel[E_1], Error_1, s=100, label="no propeller", marker="3")
-ax2.legend()
-ax2.set_title("Error Versus Velocity")
-ax2.set_xlabel("Velocity (m/s)")
-ax2.set_ylabel("Error (m/s)")
-plt.show()
+# Data_val = extractFromFile(validation_path)
+#
+# Data_val = pd.DataFrame.to_numpy(Data_val)
+# Data_val = np.delete(Data_val, 0, 1)
+# Data_val = np.delete(Data_val, 0, 0)
+#
+# Val_alpha = pd.to_numeric(Data_val[0:, 1])
+# Val_engine = pd.to_numeric(Data_val[0:, 0])
+# Val_Vel = pd.to_numeric(Data_val[0:, 2])
+# Val_mic1 = pd.to_numeric(Data_val[0:, 3])
+# Val_mic2 = pd.to_numeric(Data_val[0:, 4])
+# Val_mic = (Val_mic1 + Val_mic2) / 2
+#
+# Val_input = [Val_mic, Val_alpha]
+# Result = PolyRegressor(Val_input, weight3[0], weight3[1], weight3[2], weight3[3], weight3[4], weight3[5], weight3[6],
+#                        weight3[7], weight3[8], weight3[9])
+#
+# Error = Result - Val_Vel
+# STD = np.std(Error)
+# Error = np.abs(Error)
+# STD_abs = np.std(Error)
+# print("STD:", STD, STD_abs)
+# Avg_Error = np.average(Error)
+# Avg_spd = np.average(Val_Vel)
+# Norm_error = (Avg_Error / Avg_spd) * 100
+# print(Avg_Error, Norm_error)
+# E30 = np.where(Val_engine == 30)
+# E0 = np.where(Val_engine == 0)
+# E_1 = np.where(Val_engine == -1)
+# Error30 = Error[E30]
+# Error0 = Error[E0]
+# Error_1 = Error[E_1]
+#
+# fig = plt.figure()
+# ax1 = fig.add_subplot()
+# ax1.scatter(Val_alpha[E30], Error30, s=100, label="engine 30%", marker="1")
+# ax1.scatter(Val_alpha[E0], Error0, s=100, label="engine 0%", marker="2")
+# ax1.scatter(Val_alpha[E_1], Error_1, s=100, label="no propeller", marker="3")
+# ax1.legend()
+# ax1.set_title("Error Versus Angle of Attack")
+# ax1.set_xlabel("Angle of Attack (deg)")
+# ax1.set_ylabel("Error (m/s)")
+# plt.show()
+#
+# fig = plt.figure()
+# ax2 = fig.add_subplot()
+# ax2.scatter(Val_Vel[E30], Error30, s=100, label="engine 30%", marker="1")
+# ax2.scatter(Val_Vel[E0], Error0, s=100, label="engine 0%", marker="2")
+# ax2.scatter(Val_Vel[E_1], Error_1, s=100, label="no propeller", marker="3")
+# ax2.legend()
+# ax2.set_title("Error Versus Velocity")
+# ax2.set_xlabel("Velocity (m/s)")
+# ax2.set_ylabel("Error (m/s)")
+# plt.show()
 
 # TESTING THE MODEL WITH THE SHORT CLIPS
 
@@ -187,5 +187,31 @@ op_mic2 = pd.to_numeric(Data_op[0:, 4])
 op_mic = (op_mic1 + op_mic2) / 2
 
 op_input = [op_mic, op_alpha]
-Result = PolyRegressor(op_input, weight3[0], weight3[1], weight3[2], weight3[3], weight3[4], weight3[5], weight3[6],
-                       weight3[7], weight3[8], weight3[9])
+Result_op = PolyRegressor(op_input, weight3[0], weight3[1], weight3[2], weight3[3], weight3[4], weight3[5], weight3[6],
+                          weight3[7], weight3[8], weight3[9])
+
+Error_op = Result_op - op_Vel
+STD_op = np.std(Error_op)
+Error_op = np.abs(Error_op)
+STD_op_abs = np.std(Error_op)
+print("STD:", STD_op, STD_op_abs)
+Avg_Error_op = np.average(Error_op)
+
+
+fig = plt.figure()
+ax3 = fig.add_subplot()
+ax3.scatter(op_alpha, Error_op, s=100, label="Operational test", marker="1")
+ax3.legend()
+ax3.set_title("Error Versus Angle of Attack")
+ax3.set_xlabel("Angle of Attack (deg)")
+ax3.set_ylabel("Error (m/s)")
+plt.show()
+
+fig = plt.figure()
+ax4 = fig.add_subplot()
+ax4.scatter(op_Vel, Error_op, s=100, label="Operational test", marker="1")
+ax4.legend()
+ax4.set_title("Error Versus Velocity")
+ax4.set_xlabel("Velocity (m/s)")
+ax4.set_ylabel("Error (m/s)")
+plt.show()
