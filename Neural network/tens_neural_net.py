@@ -3,7 +3,7 @@ from matplotlib.pyplot import axis
 import tensorflow as tf
 import numpy as np
 import pandas as pd
-import matplotlib as plt
+import matplotlib.pyplot as plt
 from tensorflow import keras
 from tensorflow.keras import layers
 import h5py
@@ -41,11 +41,11 @@ if __name__ == "__main__":
 
     model = keras.Sequential(
         [
-            layers.Dense(50, name="Dense_1" , input_shape=(15362,), kernel_initializer=my_init), #Needs more parameters, it is not overfitting but oscillating
-            layers.Dense(50, name="Dense_2", kernel_initializer=my_init),
+            layers.Dense(130, name="Dense_1" , input_shape=(15362,), kernel_initializer=my_init), #Needs more parameters, it is not overfitting but oscillating
+            layers.Dense(130, name="Dense_2", kernel_initializer=my_init),
             layers.BatchNormalization(name="batch_norm"),
-            layers.Dense(20, activation= "sigmoid", name="Dense_3", kernel_initializer=my_init), 
-            layers.Dense(20, activation = "sigmoid",  name="Dense_4", kernel_initializer=my_init), 
+            layers.Dense(30, activation= "sigmoid", name="Dense_3", kernel_initializer=my_init), 
+            layers.Dense(30, activation = "sigmoid",  name="Dense_4", kernel_initializer=my_init), 
             layers.Dense(1, name="Dense_5"),
         ]
     )
@@ -76,7 +76,16 @@ if __name__ == "__main__":
     opt1 = keras.optimizers.Nadam(learning_rate=0.001, beta_1=0.7, beta_2=0.7, epsilon=1e-07, name="Nadam")
     opt2 = keras.optimizers.SGD(lr=1, decay=1e-6, momentum=0.2, nesterov=True)
     opt3 = keras.optimizers.Adadelta(learning_rate=0.001, rho=0.95, epsilon=1e-07, name="Adadelta")
-    loss = keras.losses.MeanSquaredError(reduction="auto", name="mean_squared_error")
+    opt4 = keras.optimizers.RMSprop(learning_rate= 0.001, rho=0.9, centered=True, name= 'RMSprop')
+    opt5 = keras.optimizers.Adagrad(learning_rate= 0.001, initial_accumulator_value= 0.1, name= "Adagrad")
+    opt6 = keras.optimizers.Ftrl(    learning_rate=0.001,learning_rate_power=-0.5,initial_accumulator_value=0.1, l1_regularization_strength=0.0,  \
+    l2_regularization_strength=0.0,name="Ftrl",l2_shrinkage_regularization_strength=0.0,beta=0.0)
+
+    loss1 = keras.losses.MeanSquaredError(reduction="auto", name="mean_squared_error")
+    loss2 = keras.losses.huber(delta=1.0)
+    loss3 = keras.losses.MeanSquaredLogarithmicError(reduction="auto", name="mean_squared_logarithmic_error")
+
+
     mtr = keras.metrics.MeanSquaredError(name="mean_squared_error", dtype=None)
     mtr1 = tf.keras.metrics.MeanAbsoluteError(name ="Mean_absolute_error")
 
@@ -85,7 +94,7 @@ if __name__ == "__main__":
     model.compile(
         optimizer = opt,  # Optimizer
         # Loss function to minimize
-        loss = loss,
+        loss = loss1,
         # List of metrics to monitor
         metrics=[mtr1],
     )
@@ -105,7 +114,19 @@ if __name__ == "__main__":
     results = model.evaluate(x_eval, y_eval, batch_size=6)
     print("test loss, test metrics:", results)
 
-    model.save(r'C:\Users\damie\OneDrive\Desktop\Damien\TAS\Keras_model\model_raw_split1')
+    def plot_history(history, key):
+        plt.plot(history.history[key])
+        plt.plot(history.history['val_'+key])
+        plt.xlabel("Epochs")
+        plt.ylabel(key)
+        plt.legend([key, 'val_'+key])
+        plt.show()
+
+    plot_history(history, 'Mean_absolute_error')
+
+
+    
+    model.save(r'C:\Users\damie\OneDrive\Desktop\Damien\TAS\Keras_model\Model')
 
 
 
