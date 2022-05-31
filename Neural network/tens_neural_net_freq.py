@@ -28,7 +28,7 @@ if __name__ == "__main__":
             layers.Dense(30, name="Dense_1" , input_shape=(420002,), activation=None),
             layers.BatchNormalization(name="batch_norm"),
             layers.Dense(30, activation="sigmoid", name="Dense_2"), 
-            layers.Dense(10, activation="sigmoid", name="Dense_3"), 
+            layers.Dense(10, activation=None , name="Dense_3"), 
             layers.Dense(1, name="Dense_4"),
         ]
     )
@@ -55,8 +55,8 @@ if __name__ == "__main__":
 
 
 
-    opt = keras.optimizers.Adam(name="adam", learning_rate=0.001, beta_1= 0.2, beta_2 = 0.2)
-    opt1 = keras.optimizers.Nadam(learning_rate=0.001, beta_1=0.7, beta_2=0.7, epsilon=1e-07, name="Nadam")
+    opt = keras.optimizers.Adam(name="adam", learning_rate=0.001, beta_1= 0.9, beta_2 = 0.9)
+    opt1 = keras.optimizers.Nadam(learning_rate=0.001, beta_1=0.9, beta_2=0.9, epsilon=1e-07, name="Nadam")
     opt2 = keras.optimizers.SGD(lr=1, decay=1e-6, momentum=0.2, nesterov=True)
     opt3 = keras.optimizers.Adadelta(learning_rate=0.001, rho=0.95, epsilon=1e-07, name="Adadelta")
     loss = keras.losses.MeanSquaredError(reduction="auto", name="mean_squared_error")
@@ -77,8 +77,8 @@ if __name__ == "__main__":
     history = model.fit(
         x_test,
         y_test,
-        batch_size= 20, #smaller batches seem to give better results so try that I guess
-        epochs=500,
+        batch_size= 10, #smaller batches seem to give better results so try that I guess
+        epochs= 50,
         validation_split=0.2, #TODO figure out what inputs it wants
     )
 

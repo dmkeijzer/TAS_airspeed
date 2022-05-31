@@ -34,4 +34,6 @@ results["true speed"] = y_sets
 print("predictions:", results)
 
 plt.scatter(results["true speed"], results["estimated values"])
+plt.xlabel("True speed")
+plt.ylabel("Estimated value")
 plt.show()
