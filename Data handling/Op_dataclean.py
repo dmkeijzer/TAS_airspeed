@@ -86,6 +86,7 @@ class trial_data:
                 self.expect3 = np.dot(self.x, self.y3) / (np.sum(self.y3))
                 self.stdev2 = np.std(self.y2)
                 self.stdev3 = np.std(self.y3)
+                print(np.size(self.org_mic_2))
             self.data.append([self.index, self.engine, self.alpha, self.v, self.P_sum2, self.P_sum3])
 
         """ The following function let's you plot voltage vs time (vt). The index parameter

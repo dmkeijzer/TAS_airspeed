@@ -13,8 +13,8 @@ validation_path = r"C:\Users\Max Reinhard\Documents\BSc2 AE\Semester 2\Test, ana
 
 op_test = r"C:\Users\Max Reinhard\Documents\BSc2 AE\Semester 2\Test, analysis and simulation\TAS_airspeed\data_sets\Op_validation.csv"
 
-op_step = 1
-tr_step = 1
+op_step = 2500
+tr_step = 500000 # I got the best results with these coefficients. Just found them through trial and error
 
 
 def extractFromFile(path):  # Function extracts the column the data from the csv in the form of a transpose dataframe
@@ -199,7 +199,7 @@ Error_op = np.abs(Error_op)
 STD_op_abs = np.std(Error_op)
 print("STD:", STD_op, STD_op_abs)
 Avg_Error_op = np.average(Error_op)
-
+print("Average", Avg_Error_op)
 fig = plt.figure()
 ax3 = fig.add_subplot()
 ax3.scatter(op_alpha, Error_op, s=100, label="Operational test", marker="1")
@@ -216,4 +216,20 @@ ax4.legend()
 ax4.set_title("Error Versus Velocity")
 ax4.set_xlabel("Velocity (m/s)")
 ax4.set_ylabel("Error (m/s)")
+plt.show()
+
+
+
+fig = plt.figure(figsize=(7, 7))
+ax = fig.add_subplot(projection='3d')
+ax.scatter(mic, alpha, Vel, color='red', label='Exact Velocities (m/s)', alpha=1)
+surf = ax.plot_trisurf(op_mic, op_alpha, Result_op, label='Calculated Velocities (m/s)', alpha=0.9)
+surf._edgecolors2d = surf._edgecolor3d
+surf._facecolors2d = surf._facecolor3d
+ax.legend()
+ax.set_title('Regression - All Engine Settings - Short clips')
+ax.set_xlabel('SPL')
+ax.set_ylabel('Angle of Attack(deg)')
+ax.set_zlabel('Velocity(m/s)')
+plt.legend()
 plt.show()
