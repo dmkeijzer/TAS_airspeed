@@ -12,15 +12,16 @@ path = r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\
 
 df_tens = pd.read_csv(path).to_numpy()
 df_tens = np.delete(df_tens, 0, axis=1)
+df_tens = df_tens.transpose()
 
 
 x_sets = df_tens[:,:-1]
-x_eval = x_sets[10138:12673,:]
-x_test = x_sets[0:10138,:]
+x_eval = x_sets[102:130,:]
+x_test = x_sets[0:102,:]
 
 y_sets = df_tens[:,-1]
-y_eval= y_sets[10138:12673]
-y_test = y_sets[0:10138]
+y_eval= y_sets[102:130]
+y_test = y_sets[0:102]
 
 print("Evaluate on test data")
 eval = model.evaluate(x_eval, y_eval, batch_size=128)

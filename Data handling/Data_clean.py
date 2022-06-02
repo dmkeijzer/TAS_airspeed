@@ -6,9 +6,10 @@ import matplotlib.pyplot as plt
 import os
 import sys
 import pandas as pd
+from sklearn.preprocessing import normalize
 
 
-file_path = r"D:\Aerospace Engineering\Bachelor Year 2\AE2223-I Test Analysis & Simulation\Validation" #put the path to your data here
+file_path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data" #put the path to your data here
 files = os.listdir(file_path)
 os.chdir(file_path)
 
@@ -21,13 +22,39 @@ class trial_data:
     def __init__(self, path, transf = True):
         self.df = pd.read_csv(path)
         self.path = path.split("_")
-        print(path)
         self.mic_1 = self.df.loc[:, "m1"].values #voltage values from mic 1
         self.mic_2 = self.df.loc[:, "m2"].values #voltage values from mic 2
         self.mic_3 = self.df.loc[:, "m3"].values #voltage values from mic 3
-        self.time_arr = self.df.loc[:, "m1_Time*"].values #series containing all time points
+        self.time_arr = self.df.loc[:,"m1_Time*"].values #series containing all time points
+        
+        if transf:
+        #switching to frequency domain
+            self.x = scf.rfftfreq(len(self.time_arr), self.time_arr[1])
+            self.y2 = np.abs(scf.rfft(self.mic_2))
+            self.y3 = np.abs(scf.rfft(self.mic_3))
+            #self.x = (self.x < 14000) * self.x
+            #self.y2 = (self.x < 14000) * self.y2
+            #self.y3 = (self.x < 14000) * self.y3
+            
+            #cleaning the weird peaks from the data
+            
+            self.y2 = abs(((self.y2 > 20) * (30 < self.x) * (self.x < 70))-1) * self.y2
+            self.y3 = abs(((self.y3 > 20) * (30 < self.x) * (self.x < 70))-1) * self.y3
+            self.y2 = (self.y2 < 100) * self.y2
+            self.y3 = (self.y3 < 100) * self.y3
+            
+            radius = 10       
+            for i in range(1, int(self.x[-1] / 50)):
+                self.y2 = abs(((self.y2 > 20) * (50 * i - radius < self.x) * (self.x < 50 * i + radius))-1) * self.y2
+                self.y3 = abs(((self.y3 > 20) * (50 * i - radius < self.x) * (self.x < 50 * i + radius))-1) * self.y3
+            self.P_sum2 = np.sum(self.y2)
+            self.P_sum3 = np.sum(self.y3)
+            self.expect2 = np.dot(self.x, self.y2) / (np.sum(self.y2))
+            self.expect3 = np.dot(self.x, self.y3) / (np.sum(self.y3))
+            self.stdev2 = np.std(self.y2)
+            self.stdev3 = np.std(self.y3)
 
-        # recognizing what the input parameters are for current run
+        #recognizing what the input parameters are for current run
 
         if self.path[2] == 'noEngine':
             self.engine = 0
@@ -49,46 +76,9 @@ class trial_data:
             self.v = int(self.path[4][:1])
         if self.path[-1] == 'movedUAV.csv':
             self.state_uav = 1
-        else:
+        else: 
             self.state_uav = 0
-        self.data = []
-        for i in range(10):
-            self.index = i
-            initvalue = 100000 #The first initial value
-            timestep = 50000 # the number of datapoints in each file
-            gap = 100000 # the distance between initial values
-            start_index = gap*i + initvalue
-            end_index = gap*i + initvalue + timestep
-            self.time_arr = self.time_arr[start_index:end_index]
-            self.mic_2 = self.mic_2[start_index:end_index]
-            self.mic_3 = self.mic_3[start_index:end_index]
-            if transf:
-            #switching to frequency domain
-                self.x = scf.rfftfreq(len(self.time_arr), self.time_arr[1])
-                self.y2 = np.abs(scf.rfft(self.mic_2))
-                self.y3 = np.abs(scf.rfft(self.mic_3))
-                self.x = (self.x < 14000) * self.x
-                self.y2 = (self.x < 14000) * self.y2
-                self.y3 = (self.x < 14000) * self.y3
-
-                #cleaning the weird peaks from the data
-
-                self.y2 = abs(((self.y2 > 20) * (30 < self.x) * (self.x < 70))-1) * self.y2
-                self.y3 = abs(((self.y3 > 20) * (30 < self.x) * (self.x < 70))-1) * self.y3
-                self.y2 = (self.y2 < 100) * self.y2
-                self.y3 = (self.y3 < 100) * self.y3
-
-                radius = 10
-                for i in range(1, int(self.x[-1] / 50)):
-                    self.y2 = abs(((self.y2 > 20) * (50 * i - radius < self.x) * (self.x < 50 * i + radius))-1) * self.y2
-                    self.y3 = abs(((self.y3 > 20) * (50 * i - radius < self.x) * (self.x < 50 * i + radius))-1) * self.y3
-                self.P_sum2 = np.sum(self.y2)
-                self.P_sum3 = np.sum(self.y3)
-                self.expect2 = np.dot(self.x, self.y2) / (np.sum(self.y2))
-                self.expect3 = np.dot(self.x, self.y3) / (np.sum(self.y3))
-                self.stdev2 = np.std(self.y2)
-                self.stdev3 = np.std(self.y3)
-            self.data.append([self.index, self.engine, self.alpha, self.v, self.P_sum2, self.P_sum3])
+        
 
         """ The following function let's you plot voltage vs time (vt). The index parameter
         let's you decide on which mic to plot. Will probs change since it is useless now"""
@@ -107,7 +97,7 @@ def create_data_file(file_location, limiter = False):
     """Creates a csv file of some key parameters of all the runs. The amount
     of files can be limited with the limiter parameter"""
 
-    result = []
+    data = np.ones((420003, 1))
 
     for counter, file in enumerate(os.listdir(file_path) , start=1):
         if counter == limiter: 
@@ -115,44 +105,49 @@ def create_data_file(file_location, limiter = False):
             
         
         run = trial_data(file)
-        result.append(run.data)
-
-
-
-    result = np.array(result)
-
-    #Writing it to csv
-
-    df = pd.DataFrame(result)
-    df.to_csv(os.path.realpath(file_location + "\\data_validation_new.csv"), index_label="index")
-
-def create_raw_data_file(file_location, limiter= False):
-    slice = 7000
-    start = int(1e5)
-    end = int(start + slice)
-    data = np.ones((7003, 1))
-
-    for counter, file in enumerate(os.listdir(file_path) , start=1):
-        if counter == limiter: 
-            break
-            
-        
-        run = trial_data(file, transf=False)
         print(run.path)
         
-        arr = np.concatenate((run.mic_2[start:slice], run.mic_3[start:end], [run.engine], [run.alpha], [run.v])).reshape(-1,1)
+        arr = np.concatenate((run.y2[run.x < 14000], run.y3[run.x < 14000], [run.engine], [run.alpha], [run.v])).reshape(420003,1)
         
         data = np.append(data, arr, axis=1)
 
         print(np.shape(data))
-
+    
     data = np.delete(data, 0 ,axis=1)
     data = np.array(data)
 
     #Writing it to csv
 
     df = pd.DataFrame(data)
-    df.to_csv(os.path.realpath(file_location + "\\tensor_file_raw1.csv"), index_label= "index")
+    df.to_csv(os.path.realpath(file_location + "\\tensor_file.csv"), index_label= "index")
+
+def create_raw_data_file(file_location, limiter= False):
+    slice = 7680
+    data = np.ones((1, int(2 * slice + 3)))
+
+    for counter, file in enumerate(os.listdir(file_path) , start=1):
+        start = 0
+
+        if counter == limiter: 
+            break
+
+        for i in range(99):    
+            run = trial_data(file, transf=False)
+            arr = np.concatenate((run.mic_2[start:int(start + slice)], run.mic_3[start:int(start + slice)], [run.engine], [run.alpha], [run.v])).reshape(1,-1)
+            data = np.append(data, arr, axis=0)
+            start += slice
+            
+            print(run.path)
+            print(np.shape(data))
+            print(f"slice {start} to {start + slice}\n")
+    
+    data = np.delete(data, 0 , axis=0)
+    data = np.array(data)
+
+    #Writing it to csv
+
+    df = pd.DataFrame(data)
+    df.to_csv(os.path.realpath(file_location + "\\tensor_file_raw_slice015.csv"), index_label= "index")
 
 
 def plot_frequency_domain():
@@ -174,7 +169,7 @@ def plot_frequency_domain():
     plt.show()
 
 
-create_data_file("D:\Aerospace Engineering\Bachelor Year 2\AE2223-I Test Analysis & Simulation\Code\TAS_airspeed\data_sets")
+create_raw_data_file(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data")
 
 
 
