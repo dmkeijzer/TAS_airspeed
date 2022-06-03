@@ -1,0 +1,36 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Relating sound pressure levels in the boundary
+  layer of a nosecone to true airspeed 
+message: >-
+  If you want to refer to the code uses for this
+  paper, please cite it as below.
+type: software
+authors:
+  - given-names: 'Tudor '
+    family-names: Bejan
+  - given-names: Damien
+    family-names: Keijzer
+  - given-names: Tim
+    family-names: Honing
+  - given-names: Arham
+    family-names: Elahi
+  - given-names: Lorenzo
+    family-names: Gonzalez
+  - given-names: 'Maximiliaan '
+    family-names: Reinhard
+  - given-names: Jochem
+    name-particle: van der
+    family-names: Ouw
+  - given-names: Tim
+    family-names: Veerman
+  - given-names: Stijn
+    name-particle: van
+    family-names: Teylingen
+  - given-names: Grègoire
+    family-names: Dastros-Pitei
+  - given-names: Philip
+    family-names: Groenemeijer
