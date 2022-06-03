@@ -15,7 +15,7 @@ df_tens = np.ones((1,15363))
 
 if __name__ == "__main__":
 
-    path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\tensor_file_raw_balanced_slice015.csv"
+    path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\tens_file_time_balanced_correct.csv"
     print("started opening")
     ch_size = 520
     load_counter = 0
@@ -51,11 +51,13 @@ if __name__ == "__main__":
 
     model = keras.Sequential(
         [
-            layers.Dense(15, name="Dense_1" , input_shape=(15362,), kernel_initializer= my_init), #Needs more parameters, it is not overfitting but oscillating
+            
+            
+            # layers.Dense(6, activation= "sigmoid", name="Dense_4"), 
+            layers.Dense(15, name="Dense_1" , input_shape=(15362,)), #Needs more parameters, it is not overfitting but oscillating
             # layers.Dense(5, name="Dense_2"),
             layers.BatchNormalization(name="batch_norm"),
-            layers.Dense(10, activation= "sigmoid", name="Dense_3"), 
-            # layers.Dense(2, activation= "sigmoid", name="Dense_4"), 
+            layers.Dense(8, activation= "sigmoid", name="Dense_3"), 
             layers.Dense(7, activation = "softmax",  name="Dense_5"), 
             layers.Dense(1, name="Dense_6"),
         ]
@@ -73,17 +75,17 @@ if __name__ == "__main__":
     print("\n \n")
 
     x_sets = df_tens[:,:-1]
-    x_eval = x_sets[1664:2080,:]
-    x_test = x_sets[0:1664,:]
+    x_eval = x_sets[2217:2771,:]
+    x_test = x_sets[0:2217,:]
 
     y_sets = df_tens[:,-1]
-    y_eval= y_sets[1664:2080]
-    y_test = y_sets[0:1664]
+    y_eval= y_sets[2217:2771]
+    y_test = y_sets[0:2217]
 
 
 
 
-    opt = keras.optimizers.Adam(name="adam", learning_rate=0.035, beta_1= 0.93, beta_2 = 0.99)
+    opt = keras.optimizers.Adam(name="adam", learning_rate=0.035, beta_1= 0.95, beta_2 = 0.99)
     opt1 = keras.optimizers.Nadam(learning_rate=0.01, beta_1=0.8, beta_2=0.8, epsilon=1e-07, name="Nadam")
     opt2 = keras.optimizers.SGD(lr=1, decay=1e-6, momentum=0.2, nesterov=True)
     opt3 = keras.optimizers.Adadelta(learning_rate=0.001, rho=0.95, epsilon=1e-07, name="Adadelta")
