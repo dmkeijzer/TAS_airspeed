@@ -34,12 +34,6 @@ results["true speed"] = y_sets
 
 print("predictions:", results)
 
-<<<<<<< HEAD
-plt.scatter(results["true speed"], results["estimated values"])
-plt.xlabel("True speed")
-plt.ylabel("Estimated value")
-=======
 plt.scatter(results["true speed"], results["estimated values"], marker= "x" ,s = 30, c = "r")
 plt.grid()
->>>>>>> 01393159cdbb32aa312038da783e4c7ec3561c67
 plt.show()
