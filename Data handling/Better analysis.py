@@ -94,7 +94,6 @@ mic2 = pd.to_numeric(Data_main[0:, 4])
 #y_set1 = pd.to_numeric(Data_main[0:, 3])
 #y_set2 = pd.to_numeric(Data_main[0:, 4])
 
-=======
 # Truth = (Data_main[0:, 1] == Data_main[i, 1]) * \
 #             (Data_main[0:, 0] == Data_main[i, 0])
 # index = [i for i, x in enumerate(Truth) if x]
@@ -113,7 +112,7 @@ weight2, pcov2 = sp.curve_fit(PolyRegressor, inputarr2, Vel)
 regressor1 = PolyRegressor(inputarr1, weight1[0], weight1[1], weight1[2], weight1[3], weight1[4], weight1[5], weight1[6], weight1[7], weight1[8], weight1[9])
 regressor2 = PolyRegressor(inputarr2, weight2[0], weight2[1], weight2[2], weight2[3], weight2[4], weight2[5], weight2[6], weight2[7], weight2[8], weight2[9])
 print('MSE', mean_squared_error(Vel, regressor1), mean_squared_error(Vel, regressor2))
->>>>>>> b6028da763ab879dafb44bf5c2e1a3405af43c78
+
 
 # print(type(pd.to_numeric(x_set)))
 # try:
