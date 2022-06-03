@@ -5,7 +5,7 @@ from tensorflow import keras
 import h5py
 import pandas as pd
 
-model = keras.models.load_model(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\Keras_model\Model-3420")
+model = keras.models.load_model(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\Keras_model\Model-5556")
 model.summary()
 
 for l in model.layers:

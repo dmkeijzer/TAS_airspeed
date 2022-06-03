@@ -8,6 +8,7 @@ import pandas as pd
 from sklearn.preprocessing import normalize
 
 
+storage_path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data"
 file_path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data" #put the path to your data here
 file_path2 = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\balanced_clean_data"
 file_path3 = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\data_5ms"
@@ -122,12 +123,20 @@ def create_data_file(file_location, limiter = False):
     df = pd.DataFrame(data)
     df.to_csv(os.path.realpath(file_location + "\\tensor_file.csv"), index_label= "index")
 
-def create_time_domain_sliced_datafile(file_location, limiter= False):
-    """ """
+def create_time_domain_slice_datafile(name, file_location, data_path, limiter= False):
+    """Creates the data file used for training in the tensorflow model. Data is pulled from storage path in the format
+    of .csv files.
+    
+    name = name of the files
+    file location = Location where files will be stored
+    limiter = (optional) Limits the amount of files you load in. Only used for testing
+    storage_path = Location of stored data files 
+    """
+    
     slice = 7680
     data = np.ones((1, int(2 * slice + 3)))
 
-    for counter, file in enumerate(os.listdir(file_path2) , start=1):
+    for counter, file in enumerate(os.listdir(data_path) , start=1):
         start = 0
 
         if counter == limiter: 
@@ -150,7 +159,7 @@ def create_time_domain_sliced_datafile(file_location, limiter= False):
     #Writing it to csv
 
     df = pd.DataFrame(data)
-    df.to_csv(os.path.realpath(file_location + "\\tensor_file_raw_balanced_slice015.csv"), index_label= "index")
+    df.to_csv(os.path.realpath(file_location + "\\tens_file" + "_" +  name + ".csv"), index_label= "index")
 
 def create_freq_domain_slice_datafile(file_location, limiter= False):
     slice = 7680
@@ -215,7 +224,7 @@ def create_freq_domain_slice_datafile(file_location, limiter= False):
     #Writing it to csv
 
     df = pd.DataFrame(data)
-    df.to_csv(os.path.realpath(file_location + "\\tensor_file_with_5_balanced.csv"), index_label= "index")
+    df.to_csv(os.path.realpath(file_location + "\\tensor_file_balanced_correct.csv"), index_label= "index")
 
 def plot_frequency_domain():
     files.reverse()
@@ -266,7 +275,7 @@ def create_appendix(file_location, limiter = False):
     df.to_csv(os.path.realpath(file_location + "\\appendix_files.csv"), index_label= "index")
 
 
-
+create_time_domain_slice_datafile("time_balanced_correct", r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data", file_path2)
 
 
 
