@@ -1,5 +1,4 @@
-import csv
-from venv import create
+
 import numpy as np
 import scipy.fft as scf
 import matplotlib.pyplot as plt
@@ -9,7 +8,10 @@ import pandas as pd
 from sklearn.preprocessing import normalize
 
 
+storage_path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data"
 file_path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\clean_data" #put the path to your data here
+file_path2 = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\balanced_clean_data"
+file_path3 = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\data_5ms"
 files = os.listdir(file_path)
 os.chdir(file_path)
 
@@ -121,11 +123,20 @@ def create_data_file(file_location, limiter = False):
     df = pd.DataFrame(data)
     df.to_csv(os.path.realpath(file_location + "\\tensor_file.csv"), index_label= "index")
 
-def create_raw_data_file(file_location, limiter= False):
+def create_time_domain_slice_datafile(name, file_location, data_path, limiter= False):
+    """Creates the data file used for training in the tensorflow model. Data is pulled from storage path in the format
+    of .csv files.
+    
+    name = name of the files
+    file location = Location where files will be stored
+    limiter = (optional) Limits the amount of files you load in. Only used for testing
+    storage_path = Location of stored data files 
+    """
+    
     slice = 7680
     data = np.ones((1, int(2 * slice + 3)))
 
-    for counter, file in enumerate(os.listdir(file_path) , start=1):
+    for counter, file in enumerate(os.listdir(data_path) , start=1):
         start = 0
 
         if counter == limiter: 
@@ -143,12 +154,77 @@ def create_raw_data_file(file_location, limiter= False):
     
     data = np.delete(data, 0 , axis=0)
     data = np.array(data)
+    np.random.shuffle(data)
 
     #Writing it to csv
 
     df = pd.DataFrame(data)
-    df.to_csv(os.path.realpath(file_location + "\\tensor_file_raw_slice015.csv"), index_label= "index")
+    df.to_csv(os.path.realpath(file_location + "\\tens_file" + "_" +  name + ".csv"), index_label= "index")
 
+def create_freq_domain_slice_datafile(file_location, limiter= False):
+    slice = 7680
+    data = np.ones((1, 2* 1200 + 3))
+    plot_parameter = False
+
+    for counter, file in enumerate(os.listdir(file_path2) , start=1):
+        start = 0
+
+        if counter == limiter: 
+            break
+
+        run = trial_data(file, transf=False)
+        
+        # Uncomment to see plots of each file, just the first slice though
+        #------------------------------------------------------------------------------------------------------------------
+        # plot_parameter = True
+        # x = scf.rfftfreq(len(run.time_arr[start:int(start + slice)]), run.time_arr[start + 1] - run.time_arr[start])
+        # mic_2 = np.abs(scf.rfft(run.mic_2[start:int(start + slice)]))
+        # mic_3 = np.abs(scf.rfft(run.mic_3[start:int(start + slice)]))
+
+        # mic_2= abs(((mic_2 > 20) * (-20 < x) * (x < 70)) - 1) * mic_2
+        # mic_3 = abs(((mic_3 > 20) * (-20 < x) * (x < 70)) - 1) * mic_3
+
+        # mic_2_plot = (x < 8000)* mic_2
+        # mic_3_plot = (x < 8000) * mic_3
+        # mic_2 = mic_2[x < 8000] # array - len = 1200
+        # mic_3 = mic_3[x < 8000] # array - len = 1200
+        # plt.plot(x,mic_2_plot)
+        # plt.ylabel("[V/s]")
+        # plt.xlabel("Frequency [Hz]")
+        # plt.title(f"v = {run.v} alpha = {run.alpha}")
+        # plt.show()
+        #------------------------------------------------------------------------------------------------------------------
+        for i in range(99):    
+            if plot_parameter:
+                break
+            x = scf.rfftfreq(len(run.time_arr[start:int(start + slice)]), run.time_arr[start + 1] - run.time_arr[start])
+            mic_2 = np.abs(scf.rfft(run.mic_2[start:int(start + slice)]))
+            mic_3 = np.abs(scf.rfft(run.mic_3[start:int(start + slice)]))
+
+            mic_2= abs(((mic_2 > 20) * (-20 < x) * (x < 70)) - 1) * mic_2
+            mic_3 = abs(((mic_3 > 20) * (-20 < x) * (x < 70)) - 1) * mic_3
+
+            mic_2 = mic_2[x < 8000]
+            mic_3 = mic_3[x < 8000]
+            if np.size(mic_2) == 1201:
+                mic_2 = mic_2[:-1]
+                mic_3 = mic_3[:-1]
+            arr = np.concatenate((mic_2, mic_3, [run.engine], [run.alpha], [run.v])).reshape(1,-1)
+            data = np.append(data, arr, axis=0)
+            start += slice
+            
+            print(run.path)
+            print(np.shape(data))
+            print(f"slice {start} to {start + slice}\n")
+    
+    data = np.delete(data, 0 , axis=0)
+    data = np.array(data)
+    np.random.shuffle(data)
+
+    #Writing it to csv
+
+    df = pd.DataFrame(data)
+    df.to_csv(os.path.realpath(file_location + "\\tensor_file_balanced_correct.csv"), index_label= "index")
 
 def plot_frequency_domain():
     files.reverse()
@@ -168,8 +244,38 @@ def plot_frequency_domain():
     plt.legend()
     plt.show()
 
+def create_appendix(file_location, limiter = False): 
+    """Creates a csv file of some key parameters of all the runs. The amount
+    of files can be limited with the limiter parameter"""
+    data =[]
 
-create_raw_data_file(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data")
+    for counter, file in enumerate(os.listdir(file_path) , start=1):
+        if counter == limiter: 
+            break
+            
+        
+        run = trial_data(file, transf=False)
+        print(run.path)
+        
+        if run.engine == -1:
+            par = "No prop"
+        else:
+            par = run.engine
+        
+        arr = data.append([counter,par, run.alpha, run.v, run.state_uav ])
+        
+
+
+    
+    data = np.array(data)
+
+    #Writing it to csv
+
+    df = pd.DataFrame(data)
+    df.to_csv(os.path.realpath(file_location + "\\appendix_files.csv"), index_label= "index")
+
+
+create_time_domain_slice_datafile("time_balanced_correct", r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data", file_path2)
 
 
 

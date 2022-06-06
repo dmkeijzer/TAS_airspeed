@@ -7,22 +7,23 @@ import matplotlib.pyplot as plt
 from tensorflow import keras
 from tensorflow.keras import layers
 
-model = keras.models.load_model(r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\Neural network\Model_freq_fatter_improved")
+path_model_damien = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\Keras_model\Model-2563"
+model = keras.models.load_model(path_model_damien)
 
-path = r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\data_sets\tensor_file_balanced_correct.csv"
+path_data_stijn = r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\data_sets\tensor_file_balanced_correct.csv"
+path_data_damien = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\tens_file_time_balanced_correct.csv"
 #path_test5 = r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\data_sets\tensor_file_5ms_evaluation.csv"
-df_tens = pd.read_csv(path).to_numpy()
+df_tens = pd.read_csv(path_data_damien).to_numpy()
 df_tens = np.delete(df_tens, 0, axis=1)
 # df_tens = df_tens.transpose()
 
-
 x_sets = df_tens[:,:-1]
-x_eval = x_sets[1664:2080,:]
-x_test = x_sets[0:1664,:]
+x_eval = x_sets[2217:2771,:]
+x_test = x_sets[0:2217,:]
 
 y_sets = df_tens[:,-1]
-y_eval= y_sets[1664:2080]
-y_test = y_sets[0:1664]
+y_eval= y_sets[2217:2771]
+y_test = y_sets[0:2217]
 
 # df_tens_5 = pd.read_csv(path_test5).to_numpy()
 # df_tens_5 = np.delete(df_tens_5, 0, axis=1)
@@ -48,7 +49,7 @@ print("predictions:", results)
 
 
 absolute_error = np.abs(results["estimated values"] - results["true speed"])
-alpha = df_tens[1664:2080,-2]
+alpha = df_tens[2217:2771,-2]
 
 # plt.scatter(alpha, absolute_error)
 # plt.xlabel("Angle of attack")
