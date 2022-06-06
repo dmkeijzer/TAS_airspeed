@@ -6,14 +6,12 @@ import scipy.optimize as sp
 from sklearn.metrics import mean_squared_error
 
 # file_path = r"C:\Users\Tbeja\Desktop\CSVtest.csv"
-file_path = r"C:\Users\Max Reinhard\Documents\BSc2 AE\Semester 2\Test, analysis and simulation\TAS_airspeed\data_sets\data_list_training.csv"
+file_path = r"D:\Aerospace Engineering\Bachelor Year 2\AE2223-I Test Analysis & Simulation\Code\TAS_airspeed\data_sets\data_list_training.csv"
 # file_loc = r"C:\Users\Max Reinhard\OneDrive\Documents\BSc2 AE\Test, analysis and simulation\TAS_airspeed\data_sets"
 # regression = []
-validation_path = r"C:\Users\Max Reinhard\Documents\BSc2 AE\Semester 2\Test, analysis and " \
-                  r"simulation\TAS_airspeed\data_sets\data_list_validation.csv "
+validation_path = r"D:\Aerospace Engineering\Bachelor Year 2\AE2223-I Test Analysis & Simulation\Code\TAS_airspeed\data_sets\data_list_validation.csv"
 
-op_test = r"C:\Users\Max Reinhard\Documents\BSc2 AE\Semester 2\Test, analysis and " \
-          r"simulation\TAS_airspeed\data_sets\Op_validation.csv "
+op_test = r"D:\Aerospace Engineering\Bachelor Year 2\AE2223-I Test Analysis & Simulation\Code\TAS_airspeed\data_sets\Op_validation.csv"
 
 op_step = 2500
 tr_step = 500000 # I got the best results with these coefficients. Just found them through trial and error
@@ -68,15 +66,15 @@ weight2, pcov2 = sp.curve_fit(PolyRegressor, inputarr2, Vel)
 weight3, pcov3 = sp.curve_fit(PolyRegressor, inputarr3, Vel)
 # print(weight1)
 # print(weight2)
-print(weight3)
+# print(weight3)
 regressor1 = PolyRegressor(inputarr1, weight1[0], weight1[1], weight1[2], weight1[3], weight1[4], weight1[5],
                            weight1[6], weight1[7], weight1[8], weight1[9])
 regressor2 = PolyRegressor(inputarr2, weight2[0], weight2[1], weight2[2], weight2[3], weight2[4], weight2[5],
                            weight2[6], weight2[7], weight2[8], weight2[9])
 regressor3 = PolyRegressor(inputarr3, weight3[0], weight3[1], weight3[2], weight3[3], weight3[4], weight3[5],
                            weight3[6], weight3[7], weight3[8], weight3[9])
-print('MSE', np.sqrt(mean_squared_error(Vel, regressor1)), np.sqrt(mean_squared_error(Vel, regressor2)),
-      (mean_squared_error(Vel, regressor3)))
+# print('MSE', np.sqrt(mean_squared_error(Vel, regressor1)), np.sqrt(mean_squared_error(Vel, regressor2)),
+#       (mean_squared_error(Vel, regressor3)))
 
 # fig = plt.figure(figsize=(8, 8))
 # ax = fig.add_subplot(projection='3d')
@@ -195,34 +193,34 @@ op_input = [op_mic, op_alpha]
 Result_op = PolyRegressor(op_input, weight3[0], weight3[1], weight3[2], weight3[3], weight3[4], weight3[5], weight3[6],
                           weight3[7], weight3[8], weight3[9])
 
-Error_op = Result_op - op_Vel
-STD_op = np.std(Error_op)
-Error_op = np.abs(Error_op)
-# STD_op_abs = np.std(Error_op)
-print("STD:", STD_op)
-Avg_Error_op = np.average(Error_op)
-print("Average", Avg_Error_op)
-fig = plt.figure()
-ax3 = fig.add_subplot()
-ax3.scatter(op_alpha, Error_op, s=100, marker="1")
-ax3.set_title("Error Versus Angle of Attack")
-ax3.set_xlabel("Angle of Attack (deg)")
-ax3.set_ylabel("Error (m/s)")
-plt.show()
-
-fig = plt.figure()
-ax4 = fig.add_subplot()
-ax4.scatter(op_Vel, Error_op, s=100, marker="1")
-ax4.set_title("Error Versus Velocity")
-ax4.set_xlabel("Velocity (m/s)")
-ax4.set_ylabel("Error (m/s)")
-plt.show()
+# Error_op = Result_op - op_Vel
+# STD_op = np.std(Error_op)
+# Error_op = np.abs(Error_op)
+# # STD_op_abs = np.std(Error_op)
+# print("STD:", STD_op)
+# Avg_Error_op = np.average(Error_op)
+# print("Average", Avg_Error_op)
+# fig = plt.figure()
+# ax3 = fig.add_subplot()
+# ax3.scatter(op_alpha, Error_op, s=100, marker="1")
+# ax3.set_title("Error Versus Angle of Attack")
+# ax3.set_xlabel("Angle of Attack (deg)")
+# ax3.set_ylabel("Error (m/s)")
+# plt.show()
+#
+# fig = plt.figure()
+# ax4 = fig.add_subplot()
+# ax4.scatter(op_Vel, Error_op, s=100, marker="1")
+# ax4.set_title("Error Versus Velocity")
+# ax4.set_xlabel("Velocity (m/s)")
+# ax4.set_ylabel("Error (m/s)")
+# plt.show()
 
 
 
 fig = plt.figure(figsize=(7, 7))
 ax = fig.add_subplot(projection='3d')
-ax.scatter(mic, alpha, Vel, color='red', label='Training Points', alpha=1)
+ax.scatter(op_mic, op_alpha, op_Vel, color='red', label='Validation Points', alpha=1)
 surf = ax.plot_trisurf(op_mic, op_alpha, Result_op, label='Validation', alpha=0.9)
 surf._edgecolors2d = surf._edgecolor3d
 surf._facecolors2d = surf._facecolor3d
