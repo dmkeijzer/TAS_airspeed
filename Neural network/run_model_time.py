@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from tensorflow import keras
 from tensorflow.keras import layers
 
-path_model_damien = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\Keras_model\Model-2563"
+path_model_damien = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\Keras_model\Model-5556"
 model = keras.models.load_model(path_model_damien)
 
 path_data_stijn = r"C:\Users\Stijn van Teylingen\OneDrive - Delft University of Technology\Test, Analysis & Simulation\Python_AI\TAS_airspeed\data_sets\tensor_file_balanced_correct.csv"

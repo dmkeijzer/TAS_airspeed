@@ -5,7 +5,7 @@ from tensorflow import keras
 import h5py
 import pandas as pd
 
-model = keras.models.load_model(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\Keras_model\Model-5556")
+model = keras.models.load_model(r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\Keras_model\Model-2563")
 model.summary()
 
 for l in model.layers:
@@ -13,7 +13,11 @@ for l in model.layers:
     print(l.activation)
   except: # some layers don't have any activation
     pass
-
+print(f"Weight inspection\n"
+f"________________________________________________________________________________________________________________________________________________________________________________\n"
+f"\nAlpha layer 1 = {model.weights[0][-1,:]}\n"
+f"\nEngine layer 1 = {model.weights[0][-2,:]}\n"
+f"\nRandom sample layer 1 = {model.weights[0][3000,:]}\n")
 
 def predict_some_values():
     path = r"C:\Users\damie\OneDrive\Desktop\Damien\TAS\data\tensor_file_raw_balanced_slice015.csv"
